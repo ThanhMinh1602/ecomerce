@@ -1,10 +1,16 @@
 import 'package:ecomerce/core/constants/app_color.dart';
+import 'package:ecomerce/data/binding/initial_binding.dart';
+import 'package:ecomerce/firebase_options.dart';
 import 'package:ecomerce/routes/app_page.dart';
 import 'package:ecomerce/routes/app_router.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -13,6 +19,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String initialAppRoute = kIsWeb
+        ? AppRouter.adminLogin
+        : AppRouter.splash;
+
+    final Transition appTransition = kIsWeb
+        ? Transition.noTransition
+        : Transition.rightToLeft;
+
     return GetMaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.orange500),
@@ -20,9 +34,10 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColor.white,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRouter.splash, // Khởi tạo route bình thường
+      initialRoute: initialAppRoute,
+      initialBinding: InitialBinding(),
       getPages: AppPage.page,
-      defaultTransition: Transition.rightToLeft,
+      defaultTransition: appTransition,
     );
   }
 }

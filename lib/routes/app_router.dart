@@ -1,4 +1,5 @@
 class AppRouter {
+  // --- ROUTES APP KHÁCH HÀNG ---
   static const String splash = '/splash';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
@@ -15,4 +16,13 @@ class AppRouter {
   static const String checkout = '/checkout';
   static const String orderSuccess = '/order-success';
   static const String orderDetails = '/order-details';
+
+  // --- ROUTES WEB ADMIN ---
+  static const String adminLogin = '/admin-login';
+  static const String adminDashboard =
+      '/admin-dashboard'; // Trang tổng quan (Chart, Thống kê)
+  static const String adminProducts = '/admin-products'; // Quản lý sản phẩm
+  static const String adminCategories = '/admin-categories'; // Quản lý danh mục
+  static const String adminOrders = '/admin-orders'; // Quản lý đơn hàng
+  static const String adminUsers = '/admin-users'; // Quản lý khách hàng
 }
