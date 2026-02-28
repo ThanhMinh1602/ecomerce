@@ -32,7 +32,7 @@ class ProductModel {
   // Chuyển đổi từ JSON (Firestore) sang Model
   factory ProductModel.fromJson(Map<String, dynamic> json, String docId) {
     return ProductModel(
-      id: docId,
+      id: json['id'],
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: (json['price'] ?? 0.0).toDouble(),
@@ -53,6 +53,7 @@ class ProductModel {
   // Chuyển đổi từ Model sang JSON để lưu lên Firestore
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'description': description,
       'price': price,

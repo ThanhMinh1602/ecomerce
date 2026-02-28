@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CategoryModel {
   String id;
   String name;
-  String? imageUrl; // URL từ Cloudinary
+  String? imageUrl;
   DateTime createdAt;
 
   CategoryModel({
@@ -12,19 +12,24 @@ class CategoryModel {
     this.imageUrl,
     required this.createdAt,
   });
-  factory CategoryModel.fromJson(Map<String, dynamic> json, String docId) {
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    DateTime parseDate(dynamic value) {
+      if (value is Timestamp) return value.toDate();
+      if (value is DateTime) return value;
+      return DateTime.now();
+    }
+
     return CategoryModel(
-      id: docId,
-      name: json['name'] ?? '',
-      imageUrl: json['imageUrl'],
-      createdAt: json['createdAt'] != null
-          ? (json['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? 'Không có tên',
+      imageUrl: json['imageUrl']?.toString(),
+      createdAt: parseDate(json['createdAt']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'imageUrl': imageUrl,
       'createdAt': FieldValue.serverTimestamp(),
