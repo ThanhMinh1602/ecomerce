@@ -59,8 +59,8 @@ class AdminProductsView extends GetView<AdminProductsController> {
                             DataCell(
                               Text(
                                 NumberFormat.currency(
-                                  locale: 'vi_VN',
-                                  symbol: '₫',
+                                  locale: 'en_US',
+                                  symbol: '\$ ',
                                 ).format(product.price),
                               ),
                             ),
