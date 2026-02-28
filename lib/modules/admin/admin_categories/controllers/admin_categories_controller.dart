@@ -1,15 +1,13 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecomerce/core/utils/app_utils.dart';
-import 'package:ecomerce/data/models/category_model.dart';
-import 'package:ecomerce/data/services/category_service.dart';
-import 'package:ecomerce/data/services/cloudinary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:ecomerce/core/utils/app_utils.dart';
 import 'package:ecomerce/core/base/base_controller.dart';
-import 'package:uuid/uuid.dart';
+import 'package:ecomerce/data/models/category_model.dart';
+import 'package:ecomerce/data/services/category_service.dart';
+import 'package:ecomerce/data/services/cloudinary_service.dart';
 
 class AdminCategoriesController extends BaseController {
   final CategoryService categoryService;
@@ -30,7 +28,6 @@ class AdminCategoriesController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-
     categories.bindStream(categoryService.streamCategories());
   }
 
@@ -44,6 +41,11 @@ class AdminCategoriesController extends BaseController {
     nameController.clear();
     selectedImageBytes.value = null;
     selectedImageName.value = "";
+  }
+
+  void prepareEdit(CategoryModel category) {
+    clearFields();
+    nameController.text = category.name;
   }
 
   Future<void> pickImage() async {
@@ -63,46 +65,57 @@ class AdminCategoriesController extends BaseController {
     }
   }
 
-  Future<void> addCategory() async {
-    if (nameController.text.trim().isEmpty ||
-        selectedImageBytes.value == null) {
-      showWarning("Vui lòng nhập tên và chọn ảnh!");
-      return;
+  // Dùng chung cho cả Thêm mới và Cập nhật
+  Future<void> saveCategory({CategoryModel? oldCategory}) async {
+    if (nameController.text.trim().isEmpty) {
+      return showWarning("Vui lòng nhập tên danh mục!");
+    }
+
+    if (oldCategory == null && selectedImageBytes.value == null) {
+      return showWarning("Vui lòng chọn hình ảnh cho danh mục!");
     }
 
     showLoading();
 
     try {
-      var uuid = AppUtils.generateId();
+      var uuid = oldCategory?.id ?? AppUtils.generateId();
+      String? finalImageUrl = oldCategory?.imageUrl;
 
-      String? publicId = await cloudinaryService.uploadImage(
-        fileBytes: selectedImageBytes.value!,
-        fileName: selectedImageName.value,
-        folder: 'categories/$uuid',
-      );
+      if (selectedImageBytes.value != null) {
+        String? publicId = await cloudinaryService.uploadImage(
+          fileBytes: selectedImageBytes.value!,
+          fileName: selectedImageName.value,
+          folder: 'categories/$uuid',
+        );
 
-      if (publicId == null) {
-        hideLoading();
-        showError("Upload ảnh thất bại! Kiểm tra lại Preset.");
-        return;
+        if (publicId == null) {
+          hideLoading();
+          return showError("Upload ảnh thất bại! Kiểm tra lại cấu hình.");
+        }
+        finalImageUrl = publicId;
       }
 
-      final newCategory = CategoryModel(
+      final categoryData = CategoryModel(
         id: uuid,
         name: nameController.text.trim(),
-        imageUrl: publicId,
-        createdAt: DateTime.now(),
+        imageUrl: finalImageUrl,
+        createdAt: oldCategory?.createdAt ?? DateTime.now(),
       );
 
-      await categoryService.addCategory(newCategory);
+      if (oldCategory == null) {
+        await categoryService.addCategory(categoryData);
+        showSuccess("Thêm danh mục thành công!");
+      } else {
+        await categoryService.updateCategory(uuid, categoryData.toJson());
+        showSuccess("Cập nhật danh mục thành công!");
+      }
 
       hideLoading();
       Get.back();
-      showSuccess("Thêm danh mục vào folder $uuid thành công!");
       clearFields();
     } catch (e) {
       hideLoading();
-      showError("Lỗi: $e");
+      showError("Lỗi hệ thống: $e");
     }
   }
 
@@ -114,7 +127,7 @@ class AdminCategoriesController extends BaseController {
         try {
           await categoryService.deleteCategory(category);
           hideLoading();
-          showSuccess("Đã xóa danh mục thành công!");
+          showSuccess("Đã xóa hoàn toàn danh mục!");
         } catch (e) {
           hideLoading();
           showError("Lỗi khi xóa: $e");

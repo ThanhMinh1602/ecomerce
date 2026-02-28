@@ -7,13 +7,14 @@ import '../models/category_model.dart';
 class CategoryService extends GetxService {
   final FirebaseFirestore _firestore = FirebaseProvider.firestore;
   final CloudinaryService _cloudinary = Get.find<CloudinaryService>();
+
+  // 1. Lắng nghe danh sách Real-time
   Stream<List<CategoryModel>> streamCategories() {
     return _firestore
         .collection(FirebaseProvider.categories)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-          // Trình dọn dẹp: Bỏ qua những document lỗi để app tiếp tục chạy
           List<CategoryModel> list = [];
           for (var doc in snapshot.docs) {
             try {
@@ -21,14 +22,13 @@ class CategoryService extends GetxService {
               list.add(CategoryModel.fromJson(data));
             } catch (e) {
               print("❌ Lỗi Mapping tại Document ID: ${doc.id} -> $e");
-              // Bỏ qua document này, không để nó làm crash cả list
             }
           }
           return list;
         });
   }
 
-  // Trong file CategoryService.dart
+  // 2. Thêm mới danh mục
   Future<void> addCategory(CategoryModel category) async {
     try {
       await _firestore
@@ -52,7 +52,7 @@ class CategoryService extends GetxService {
     }
   }
 
-  // 4. Xóa danh mục: Chỉ thành công nếu cả 2 bên đều xóa xong [cite: 2026-02-28]
+  // 4. Xóa danh mục (Logic Đồng sinh cộng tử)
   Future<void> deleteCategory(CategoryModel category) async {
     try {
       String folderPath = 'ecomerce/categories/${category.id}';
@@ -61,14 +61,13 @@ class CategoryService extends GetxService {
       // BƯỚC 1: Xóa trên Cloudinary trước
       bool isCloudinaryOk = await _cloudinary.deleteFolder(folderPath);
 
-      // Nếu Cloudinary thất bại, ném lỗi để dừng quy trình [cite: 2026-02-28]
       if (!isCloudinaryOk) {
         throw Exception(
           "Không thể xóa thư mục trên Cloudinary. Hủy thao tác xóa Firestore.",
         );
       }
 
-      // BƯỚC 2: Chỉ khi Cloudinary xong mới xóa Firestore [cite: 2026-02-28]
+      // BƯỚC 2: Chỉ khi Cloudinary xong mới xóa Firestore
       await _firestore
           .collection(FirebaseProvider.categories)
           .doc(category.id)
@@ -77,7 +76,7 @@ class CategoryService extends GetxService {
       print("✅ Đã xóa sạch cả 2 hệ thống cho ID: ${category.id}");
     } catch (e) {
       print("❌ Lỗi quy trình xóa danh mục: $e");
-      rethrow; // Ném lỗi để Controller hiển thị thông báo cho Minh
+      rethrow;
     }
   }
 }
