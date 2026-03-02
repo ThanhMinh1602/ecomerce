@@ -1,86 +1,90 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:get/get.dart';
+// Ẩn các class của GetX trùng tên với Dio
+import 'package:get/get.dart' hide FormData, MultipartFile, Response;
+import 'package:dio/dio.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:cloudinary_flutter/cloudinary_context.dart';
 
-class CloudinaryService extends GetConnect implements GetxService {
-  static const String cloudName = 'dumjy6p5e'; // Cloud Name của Minh
-  static const String uploadPreset = 'ecomerce_preset'; // Preset Minh đã tạo
+class CloudinaryService extends GetxService {
+  static const String cloudName = 'dumjy6p5e';
+  static const String uploadPreset = 'ecomerce_preset';
   static const String apiKey = '335696913515213';
   static const String apiSecret = 'ohKoXC8hdmdWypQxceMJyjzqQDg';
 
   late Cloudinary cloudinary;
+  late Dio dio;
 
   @override
   void onInit() {
     super.onInit();
     cloudinary = Cloudinary.fromCloudName(cloudName: cloudName);
     CloudinaryContext.cloudinary = cloudinary;
+
+    // Khởi tạo cấu hình mặc định cho Dio
+    dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+        responseType: ResponseType.json,
+      ),
+    );
   }
 
-  /// Upload đơn lẻ với trình theo dõi tiến độ
-  // Trong file CloudinaryService.dart
-
+  /// 1. UPLOAD ĐƠN LẺ VỚI DIO
   Future<String?> uploadImage({
     required Uint8List fileBytes,
     required String fileName,
     required String folder,
-    String? publicId,
     Function(double)? onProgress,
   }) async {
     try {
-      // 1. Làm sạch folder: Xóa dấu / ở đầu và cuối nếu có để nối chuỗi chuẩn xác
-      // Ví dụ: folder truyền vào là '/categories/ID' -> sẽ thành 'categories/ID'
       final String cleanFolder = folder.startsWith('/')
           ? folder.substring(1)
           : folder;
-
-      // 2. Tạo đường dẫn tuyệt đối bắt đầu từ folder gốc 'ecomerce'
       final String finalPath = 'ecomerce/$cleanFolder';
 
-      final form = FormData({
-        'file': MultipartFile(fileBytes, filename: fileName),
+      // Sử dụng FormData của Dio
+      final formData = FormData.fromMap({
+        'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
         'upload_preset': uploadPreset,
-        'folder': finalPath, // Kết quả chắc chắn là 'ecomerce/categories/UUID'
+        'folder': finalPath,
       });
 
-      final response = await post(
+      final response = await dio.post(
         'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
-        form,
-        uploadProgress: (progress) {
-          if (onProgress != null) onProgress(progress);
+        data: formData,
+        onSendProgress: (int sent, int total) {
+          if (onProgress != null && total > 0) {
+            onProgress(sent / total);
+          }
         },
       );
 
-      if (!response.hasError && response.statusCode == 200) {
-        // Trả về public_id đầy đủ bao gồm cả folder để lưu vào Firestore
-        return response.body['public_id'];
+      if (response.statusCode == 200) {
+        return response.data['public_id'];
       }
       return null;
+    } on DioException catch (e) {
+      print(
+        "❌ Lỗi Dio Upload: ${e.response?.statusCode} - ${e.response?.data}",
+      );
+      return null;
     } catch (e) {
-      print("Cloudinary Error: $e");
+      print("❌ Ngoại lệ Upload: $e");
       return null;
     }
   }
 
-  /// Upload nhiều ảnh với tiến độ tổng hợp
+  /// 2. UPLOAD NHIỀU ẢNH
   Future<List<String>> uploadMultipleImages({
     required List<Uint8List> filesBytes,
     required List<String> fileNames,
     required String folder,
-    Function(double)? onTotalProgress, // Tiến độ tổng của cả mảng ảnh
   }) async {
-    List<String> uploadedIds = [];
-    int totalFiles = filesBytes.length;
-
-    // Mảng lưu trữ tiến độ của từng file
-    List<double> individualProgress = List.filled(totalFiles, 0.0);
-
     List<Future<String?>> uploadTasks = [];
 
-    for (int i = 0; i < totalFiles; i++) {
-      print(i);
+    for (int i = 0; i < filesBytes.length; i++) {
       uploadTasks.add(
         uploadImage(
           fileBytes: filesBytes[i],
@@ -94,33 +98,38 @@ class CloudinaryService extends GetConnect implements GetxService {
     return results.whereType<String>().toList();
   }
 
-  /// Hàm xóa nhiều ảnh cùng lúc trên Cloudinary
-  Future<bool> deleteImages(List<String> publicIds) async {
-    if (publicIds.isEmpty) return true;
-
+  Future<bool> deleteFolder(String folderPath) async {
     try {
       final String basicAuth =
           'Basic ${base64Encode(utf8.encode('$apiKey:$apiSecret'))}';
+      final options = Options(headers: {'Authorization': basicAuth});
 
-      // Gọi API xóa tài nguyên của Cloudinary
-      final response = await post(
-        'https://api.cloudinary.com/v1_1/$cloudName/resources/image/upload',
-        {'public_ids': publicIds},
-        headers: {
-          'Authorization': basicAuth,
-          'Content-Type': 'application/json',
-        },
-      );
+      final String resourceUrl =
+          'https://cors-anywhere.herokuapp.com/https://api.cloudinary.com/v1_1/$cloudName/resources/image/upload?prefix=$folderPath';
 
-      if (!response.hasError && response.statusCode == 200) {
-        print('Đã xóa các ảnh trên Cloudinary: $publicIds');
-        return true;
-      } else {
-        print('Lỗi khi xóa ảnh Cloudinary: ${response.body}');
+      final resourceRes = await dio.delete(resourceUrl, options: options);
+
+      if (resourceRes.statusCode != 200 && resourceRes.statusCode != 404) {
+        print("❌ Lỗi xóa tài nguyên: ${resourceRes.data}");
         return false;
       }
+      final String folderUrl =
+          'https://cors-anywhere.herokuapp.com/https://api.cloudinary.com/v1_1/$cloudName/folders/$folderPath';
+      final folderRes = await dio.delete(folderUrl, options: options);
+
+      if (folderRes.statusCode == 200) {
+        print('✅ Đã xóa sạch folder: $folderPath');
+        return true;
+      } else {
+        print("❌ Lỗi xóa folder: ${folderRes.data}");
+        return false;
+      }
+    } on DioException catch (e) {
+      print("❌ Lỗi Dio Delete: Mã ${e.response?.statusCode}");
+      print("❌ Chi tiết Server trả về: ${e.response?.data}");
+      return false;
     } catch (e) {
-      print('Lỗi ngoại lệ khi xóa ảnh: $e');
+      print('❌ Lỗi hệ thống: $e');
       return false;
     }
   }

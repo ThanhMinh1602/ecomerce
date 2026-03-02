@@ -8,20 +8,27 @@ class CategoryService extends GetxService {
   final FirebaseFirestore _firestore = FirebaseProvider.firestore;
   final CloudinaryService _cloudinary = Get.find<CloudinaryService>();
 
-  // 1. Lấy danh sách danh mục theo thời gian thực (Stream)
+  // 1. Lắng nghe danh sách Real-time
   Stream<List<CategoryModel>> streamCategories() {
     return _firestore
         .collection(FirebaseProvider.categories)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => CategoryModel.fromJson(doc.data(), doc.id))
-              .toList();
+          List<CategoryModel> list = [];
+          for (var doc in snapshot.docs) {
+            try {
+              final data = doc.data();
+              list.add(CategoryModel.fromJson(data));
+            } catch (e) {
+              print("❌ Lỗi Mapping tại Document ID: ${doc.id} -> $e");
+            }
+          }
+          return list;
         });
   }
 
-  // Trong file CategoryService.dart
+  // 2. Thêm mới danh mục
   Future<void> addCategory(CategoryModel category) async {
     try {
       await _firestore
@@ -45,20 +52,30 @@ class CategoryService extends GetxService {
     }
   }
 
-  // 4. Xóa danh mục
+  // 4. Xóa danh mục (Logic Đồng sinh cộng tử)
   Future<void> deleteCategory(CategoryModel category) async {
     try {
-      // 1. Xóa ảnh của Category trên Cloudinary nếu có
-      if (category.imageUrl != null) {
-        await _cloudinary.deleteImages([category.imageUrl!]);
+      String folderPath = 'ecomerce/categories/${category.id}';
+      print("Đang xóa folder: $folderPath");
+
+      // BƯỚC 1: Xóa trên Cloudinary trước
+      bool isCloudinaryOk = await _cloudinary.deleteFolder(folderPath);
+
+      if (!isCloudinaryOk) {
+        throw Exception(
+          "Không thể xóa thư mục trên Cloudinary. Hủy thao tác xóa Firestore.",
+        );
       }
 
-      // 2. Xóa danh mục trên Firestore
+      // BƯỚC 2: Chỉ khi Cloudinary xong mới xóa Firestore
       await _firestore
           .collection(FirebaseProvider.categories)
           .doc(category.id)
           .delete();
+
+      print("✅ Đã xóa sạch cả 2 hệ thống cho ID: ${category.id}");
     } catch (e) {
+      print("❌ Lỗi quy trình xóa danh mục: $e");
       rethrow;
     }
   }

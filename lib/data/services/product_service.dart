@@ -20,22 +20,42 @@ class ProductService extends GetxService {
         );
   }
 
-  Future<void> addProduct(ProductModel product) async =>
-      await _db.collection('products').add(product.toJson());
+  Future<void> addProduct(ProductModel product) async {
+    try {
+      await _db
+          .collection(FirebaseProvider.products)
+          .doc(product.id)
+          .set(product.toJson());
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   Future<void> updateProduct(String id, Map<String, dynamic> data) async =>
       await _db.collection('products').doc(id).update(data);
 
   Future<void> deleteProduct(ProductModel product) async {
     try {
-      // 1. Xóa toàn bộ ảnh liên quan trên Cloudinary
+      String folderPath = 'ecomerce/products/${product.id}';
+
+      print("Đang tiến hành xóa folder Product: $folderPath");
+
       if (product.images.isNotEmpty) {
-        await _cloudinary.deleteImages(product.images);
+        bool isCloudinaryOk = await _cloudinary.deleteFolder(folderPath);
+
+        if (!isCloudinaryOk) {
+          throw Exception(
+            "Lỗi xóa ảnh Product trên Cloudinary. Hủy xóa dữ liệu Firestore.",
+          );
+        }
       }
 
-      // 2. Sau đó mới xóa document trên Firestore
       await _db.collection('products').doc(product.id).delete();
+
+      print("✅ Đã xóa hoàn tất Product ID: ${product.id}");
     } catch (e) {
+      print("❌ Lỗi trong quy trình xóa Product: $e");
       rethrow;
     }
   }

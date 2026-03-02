@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:ecomerce/core/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -77,7 +78,23 @@ class AdminProductsController extends BaseController {
     final List<XFile> images = await picker.pickMultiImage(imageQuality: 80);
 
     if (images.isNotEmpty) {
-      for (var image in images) {
+      int currentTotal = existingImages.length + selectedImagesBytes.length;
+      int allowedToAdd = 6 - currentTotal;
+
+      if (allowedToAdd <= 0) {
+        showWarning("Bạn chỉ được phép tải lên tối đa 6 hình ảnh!");
+        return;
+      }
+
+      Iterable<XFile> imagesToAdd = images.take(allowedToAdd);
+
+      if (images.length > allowedToAdd) {
+        showWarning(
+          "Đã đạt giới hạn 6 ảnh. Chỉ thêm được $allowedToAdd ảnh mới!",
+        );
+      }
+
+      for (var image in imagesToAdd) {
         selectedImagesBytes.add(await image.readAsBytes());
         selectedImageNames.add(image.name);
       }
@@ -98,7 +115,7 @@ class AdminProductsController extends BaseController {
     reviewCountController.clear();
     stockController.clear();
     sizes.clear();
-    existingImages.clear(); // Quan trọng
+    existingImages.clear();
     selectedImagesBytes.clear();
     selectedImageNames.clear();
     selectedCategoryId.value = null;
@@ -107,79 +124,94 @@ class AdminProductsController extends BaseController {
 
   void prepareEdit(ProductModel product) {
     clearFields();
-    nameController.text = product.name; //
-    descController.text = product.description; //
-    priceController.text = product.price.toString(); //
-    oldPriceController.text = product.oldPrice?.toString() ?? ''; //
-    ratingController.text = product.rating.toString(); //
-    reviewCountController.text = product.reviewCount.toString(); //
+    nameController.text = product.name;
+    descController.text = product.description;
+    priceController.text = product.price.toString();
+    oldPriceController.text = product.oldPrice?.toString() ?? '';
+    ratingController.text = product.rating.toString();
+    reviewCountController.text = product.reviewCount.toString();
     stockController.text = product.stock.toString();
-    sizes.addAll(product.sizes); //
+    sizes.addAll(product.sizes);
     selectedCategoryId.value = product.categoryId;
-    existingImages.addAll(product.images); // Đổ ảnh cũ vào đây để quản lý
+    existingImages.addAll(product.images);
   }
 
   void removeExistingImage(int index) => existingImages.removeAt(index);
   Future<void> saveProduct({ProductModel? oldProduct}) async {
-    // 1. VALIDATION CHI TIẾT
-    if (nameController.text.trim().isEmpty)
+    if (nameController.text.trim().isEmpty) {
       return showWarning("Tên sản phẩm không được để trống!");
-    if (selectedCategoryId.value == null)
+    }
+    if (selectedCategoryId.value == null) {
       return showWarning("Vui lòng chọn danh mục!");
+    }
 
     double price = double.tryParse(priceController.text.trim()) ?? 0;
     if (price <= 0) return showWarning("Giá sản phẩm phải lớn hơn 0!");
 
-    // Check ảnh: ít nhất phải có ảnh cũ hoặc ảnh mới
-    if (existingImages.isEmpty && selectedImagesBytes.isEmpty) {
+    var uuid = oldProduct?.id ?? AppUtils.generateId();
+
+    int totalImages = existingImages.length + selectedImagesBytes.length;
+    if (totalImages == 0) {
       return showWarning("Vui lòng thêm ít nhất một hình ảnh!");
+    }
+    if (totalImages > 6) {
+      return showWarning("Tối đa chỉ được lưu 6 hình ảnh!");
     }
 
     showLoading();
     uploadProgress.value = 0.0;
 
     try {
-      // 2. UPLOAD ẢNH MỚI (NẾU CÓ)
       List<String> newUploadedIds = [];
+
       if (selectedImagesBytes.isNotEmpty) {
-        final String folder =
-            '/products/${DateTime.now().millisecondsSinceEpoch}';
-        newUploadedIds = await cloudinaryService.uploadMultipleImages(
-          filesBytes: selectedImagesBytes,
-          fileNames: selectedImageNames,
-          folder: folder,
-          onTotalProgress: (p) => uploadProgress.value = p,
-        );
+        final String folder = 'products/$uuid';
+
+        int batchSize = 3;
+
+        for (int i = 0; i < selectedImagesBytes.length; i += batchSize) {
+          int end = (i + batchSize < selectedImagesBytes.length)
+              ? i + batchSize
+              : selectedImagesBytes.length;
+
+          List<Uint8List> batchBytes = selectedImagesBytes.sublist(i, end);
+          List<String> batchNames = selectedImageNames.sublist(i, end);
+
+          List<String> batchIds = await cloudinaryService.uploadMultipleImages(
+            filesBytes: batchBytes,
+            fileNames: batchNames,
+            folder: folder,
+          );
+
+          newUploadedIds.addAll(batchIds);
+        }
       }
 
-      // 3. TỔNG HỢP DANH SÁCH ẢNH CUỐI CÙNG (Ảnh cũ chưa bị xóa + Ảnh mới)
       List<String> finalImages = [...existingImages, ...newUploadedIds];
 
       final product = ProductModel(
-        id: oldProduct?.id ?? '',
+        id: uuid,
         name: nameController.text.trim(),
         description: descController.text.trim(),
         price: price,
-        oldPrice: double.tryParse(oldPriceController.text.trim()), //
-        rating: double.tryParse(ratingController.text.trim()) ?? 0.0, //
-        reviewCount: int.tryParse(reviewCountController.text.trim()) ?? 0, //
-        sizes: sizes.toList(), //
+        oldPrice: double.tryParse(oldPriceController.text.trim()),
+        rating: double.tryParse(ratingController.text.trim()) ?? 0.0,
+        reviewCount: int.tryParse(reviewCountController.text.trim()) ?? 0,
+        sizes: sizes.toList(),
         images: finalImages,
         stock: int.tryParse(stockController.text.trim()) ?? 0,
         categoryId: selectedCategoryId.value!,
         createdAt: oldProduct?.createdAt ?? DateTime.now(),
       );
 
-      // 4. LƯU DATABASE
       if (oldProduct == null) {
         await productService.addProduct(product);
       } else {
         await productService.updateProduct(product.id, product.toJson());
       }
 
-      // 5. ĐÓNG FORM VÀ RESET
       hideLoading();
-      Get.back(); // Đảm bảo đóng Dialog thành công [cite: 2026-02-26]
+      Get.back();
       showSuccess("Đã lưu sản phẩm thành công!");
       clearFields();
     } catch (e) {

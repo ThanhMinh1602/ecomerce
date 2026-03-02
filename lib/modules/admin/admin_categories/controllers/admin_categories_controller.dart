@@ -1,19 +1,15 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecomerce/core/utils/app_utils.dart';
-import 'package:ecomerce/data/models/category_model.dart';
-import 'package:ecomerce/data/services/category_service.dart';
-import 'package:ecomerce/data/services/cloudinary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-// Import các thành phần trong project của bạn
+import 'package:ecomerce/core/utils/app_utils.dart';
 import 'package:ecomerce/core/base/base_controller.dart';
-import 'package:uuid/uuid.dart';
+import 'package:ecomerce/data/models/category_model.dart';
+import 'package:ecomerce/data/services/category_service.dart';
+import 'package:ecomerce/data/services/cloudinary_service.dart';
 
 class AdminCategoriesController extends BaseController {
-  // 1. Các Service được truyền qua Constructor
   final CategoryService categoryService;
   final CloudinaryService cloudinaryService;
 
@@ -22,20 +18,16 @@ class AdminCategoriesController extends BaseController {
     required this.cloudinaryService,
   });
 
-  // 2. Các Controller và Biến quan sát (Rx)
   final nameController = TextEditingController();
 
-  // Dữ liệu hình ảnh được chọn
   var selectedImageBytes = Rxn<Uint8List>();
   var selectedImageName = "".obs;
 
-  // Danh sách danh mục được đồng bộ Real-time từ Firestore
   RxList<CategoryModel> categories = <CategoryModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    // 3. Lắng nghe dữ liệu thay đổi từ Service ngay khi khởi tạo
     categories.bindStream(categoryService.streamCategories());
   }
 
@@ -45,24 +37,23 @@ class AdminCategoriesController extends BaseController {
     super.onClose();
   }
 
-  // ==========================================
-  // CÁC HÀM XỬ LÝ LOGIC
-  // ==========================================
-
-  /// Làm sạch form sau khi sử dụng hoặc khi mở Dialog mới
   void clearFields() {
     nameController.clear();
     selectedImageBytes.value = null;
     selectedImageName.value = "";
   }
 
-  /// Chọn hình ảnh từ thiết bị (Hỗ trợ tốt trên cả Web và Mobile)
+  void prepareEdit(CategoryModel category) {
+    clearFields();
+    nameController.text = category.name;
+  }
+
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 80, // Tối ưu dung lượng trước khi upload
+        imageQuality: 80,
       );
 
       if (image != null) {
@@ -74,53 +65,60 @@ class AdminCategoriesController extends BaseController {
     }
   }
 
-  Future<void> addCategory() async {
-    if (nameController.text.trim().isEmpty ||
-        selectedImageBytes.value == null) {
-      showWarning("Vui lòng nhập tên và chọn ảnh!");
-      return;
+  // Dùng chung cho cả Thêm mới và Cập nhật
+  Future<void> saveCategory({CategoryModel? oldCategory}) async {
+    if (nameController.text.trim().isEmpty) {
+      return showWarning("Vui lòng nhập tên danh mục!");
+    }
+
+    if (oldCategory == null && selectedImageBytes.value == null) {
+      return showWarning("Vui lòng chọn hình ảnh cho danh mục!");
     }
 
     showLoading();
 
     try {
-      // Tạo ID duy nhất bằng AppUtils [cite: 2026-02-26]
-      var uuid = AppUtils.generateId();
+      var uuid = oldCategory?.id ?? AppUtils.generateId();
+      String? finalImageUrl = oldCategory?.imageUrl;
 
-      // Truyền folder dưới dạng sub-path (Service sẽ tự thêm tiền tố 'ecomerce/')
-      String? publicId = await cloudinaryService.uploadImage(
-        fileBytes: selectedImageBytes.value!,
-        fileName: selectedImageName.value,
-        folder: 'categories', // Bỏ dấu / ở đầu để Service xử lý cho sạch
-      );
+      if (selectedImageBytes.value != null) {
+        String? publicId = await cloudinaryService.uploadImage(
+          fileBytes: selectedImageBytes.value!,
+          fileName: selectedImageName.value,
+          folder: 'categories/$uuid',
+        );
 
-      if (publicId == null) {
-        hideLoading();
-        showError("Upload ảnh thất bại! Kiểm tra lại Preset.");
-        return;
+        if (publicId == null) {
+          hideLoading();
+          return showError("Upload ảnh thất bại! Kiểm tra lại cấu hình.");
+        }
+        finalImageUrl = publicId;
       }
 
-      // Model lưu docId trùng với tên folder trên Cloudinary để dễ quản lý
-      final newCategory = CategoryModel(
+      final categoryData = CategoryModel(
         id: uuid,
         name: nameController.text.trim(),
-        imageUrl: publicId,
-        createdAt: DateTime.now(),
+        imageUrl: finalImageUrl,
+        createdAt: oldCategory?.createdAt ?? DateTime.now(),
       );
 
-      await categoryService.addCategory(newCategory);
+      if (oldCategory == null) {
+        await categoryService.addCategory(categoryData);
+        showSuccess("Thêm danh mục thành công!");
+      } else {
+        await categoryService.updateCategory(uuid, categoryData.toJson());
+        showSuccess("Cập nhật danh mục thành công!");
+      }
 
       hideLoading();
       Get.back();
-      showSuccess("Thêm danh mục vào folder $uuid thành công!");
       clearFields();
     } catch (e) {
       hideLoading();
-      showError("Lỗi: $e");
+      showError("Lỗi hệ thống: $e");
     }
   }
 
-  /// Xóa danh mục (Có thể gọi từ UI khi nhấn nút xóa)
   void deleteCategory(CategoryModel category) {
     showDeleteConfirmDialog(
       itemName: category.name,
@@ -129,7 +127,7 @@ class AdminCategoriesController extends BaseController {
         try {
           await categoryService.deleteCategory(category);
           hideLoading();
-          showSuccess("Đã xóa danh mục thành công!");
+          showSuccess("Đã xóa hoàn toàn danh mục!");
         } catch (e) {
           hideLoading();
           showError("Lỗi khi xóa: $e");

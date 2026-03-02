@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart'; // Thêm import này
 
 class CustomAdminTable<T> extends StatefulWidget {
   final List<String> columns;
@@ -23,13 +24,10 @@ class CustomAdminTable<T> extends StatefulWidget {
 }
 
 class _CustomAdminTableState<T> extends State<CustomAdminTable<T>> {
-  // 1. Khai báo ScrollController để điều khiển thanh cuộn ngang
-  // Việc dùng chung controller cho Scrollbar và SingleChildScrollView giúp sửa lỗi trên Web
   final ScrollController _horizontalController = ScrollController();
 
   @override
   void dispose() {
-    // 2. Giải phóng controller khi widget bị hủy để tránh rò rỉ bộ nhớ
     _horizontalController.dispose();
     super.dispose();
   }
@@ -55,20 +53,20 @@ class _CustomAdminTableState<T> extends State<CustomAdminTable<T>> {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (widget.isLoading) return _buildLoadingState();
+    // Nếu đang load, sử dụng Shimmer thay vì CircularProgress [cite: 2026-02-28]
+    if (widget.isLoading) return _buildShimmerLoading(context);
+
     if (widget.items.isEmpty) return widget.emptyWidget ?? _buildEmptyState();
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scrollbar(
-          // 3. Gán controller cho Scrollbar
           controller: _horizontalController,
           thumbVisibility: true,
           trackVisibility: true,
           thickness: 8,
           radius: const Radius.circular(4),
           child: SingleChildScrollView(
-            // 4. Gán CÙNG controller cho SingleChildScrollView
             controller: _horizontalController,
             scrollDirection: Axis.horizontal,
             child: ConstrainedBox(
@@ -112,6 +110,55 @@ class _CustomAdminTableState<T> extends State<CustomAdminTable<T>> {
     );
   }
 
+  /// Hiệu ứng Shimmer Loading cho toàn bộ bảng
+  Widget _buildShimmerLoading(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200]!,
+      highlightColor: Colors.grey[100]!,
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            // Giả lập Heading của bảng
+            Container(
+              height: 52,
+              color: Colors.white,
+              margin: const EdgeInsets.only(bottom: 2),
+            ),
+            // Giả lập 6 dòng dữ liệu [cite: 2026-02-28]
+            ...List.generate(6, (index) => _buildShimmerRow()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Widget dòng Shimmer đơn lẻ để khớp với cấu trúc DataRow
+  Widget _buildShimmerRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade50)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(
+          widget.columns.length,
+          (index) => Expanded(
+            child: Container(
+              height: 20,
+              margin: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   DataColumn _buildColumn(String name) {
     return DataColumn(
       label: Text(
@@ -121,22 +168,6 @@ class _CustomAdminTableState<T> extends State<CustomAdminTable<T>> {
           fontWeight: FontWeight.w800,
           color: Color(0xFF808291),
           letterSpacing: 0.8,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingState() {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(60.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(strokeWidth: 3, color: Colors.blueAccent),
-            SizedBox(height: 16),
-            Text("Đang tải dữ liệu...", style: TextStyle(color: Colors.grey)),
-          ],
         ),
       ),
     );
