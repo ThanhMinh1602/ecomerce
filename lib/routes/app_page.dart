@@ -1,4 +1,3 @@
-// --- IMPORTS APP KHÁCH ---
 import 'package:ecomerce/modules/admin/admin_categories/bindings/admin_categories_binding.dart';
 import 'package:ecomerce/modules/admin/admin_categories/views/admin_categories_view.dart';
 import 'package:ecomerce/modules/admin/admin_dashboard/bindings/admin_dashboard_binding.dart';
@@ -6,6 +5,7 @@ import 'package:ecomerce/modules/admin/admin_dashboard/views/admin_dashboard_vie
 import 'package:ecomerce/modules/app/auth/bindings/auth_binding.dart';
 import 'package:ecomerce/modules/app/auth/views/forgot_password_view.dart';
 import 'package:ecomerce/modules/app/auth/views/login_view.dart';
+import 'package:ecomerce/modules/app/auth/views/signup_view.dart';
 import 'package:ecomerce/modules/app/cart/bindings/cart_binding.dart';
 import 'package:ecomerce/modules/app/cart/views/cart_view.dart';
 import 'package:ecomerce/modules/app/dashboard/bindings/dashboard_binding.dart';
@@ -21,11 +21,9 @@ import 'package:ecomerce/modules/app/profile/views/profile_view.dart';
 import 'package:ecomerce/modules/app/splash/bindings/splash_binding.dart';
 import 'package:ecomerce/modules/app/splash/views/splash_view.dart';
 
-// --- IMPORTS ADMIN KHU VỰC MỚI ---
 import 'package:ecomerce/modules/admin/admin_login/bindings/admin_login_binding.dart';
 import 'package:ecomerce/modules/admin/admin_login/views/admin_login_view.dart';
 
-// Import thêm các modules Admin vừa tạo
 import 'package:ecomerce/modules/admin/admin_products/bindings/admin_products_binding.dart';
 import 'package:ecomerce/modules/admin/admin_products/views/admin_products_view.dart';
 import 'package:ecomerce/modules/admin/admin_orders/bindings/admin_orders_binding.dart';
@@ -40,9 +38,6 @@ class AppPage {
   static final INITIAL_ROUTER = AppRouter.splash;
 
   static final page = [
-    // ==========================================
-    // CÁC ROUTES CỦA APP KHÁCH HÀNG (Giữ nguyên)
-    // ==========================================
     GetPage(
       name: AppRouter.splash,
       page: () => const SplashView(),
@@ -55,12 +50,17 @@ class AppPage {
     ),
     GetPage(
       name: AppRouter.login,
-      page: () => const LoginView(),
+      page: () => LoginView(),
       binding: AuthBinding(),
       children: [
         GetPage(
           name: AppRouter.forgotPassword,
           page: () => const ForgotPasswordView(),
+          binding: AuthBinding(),
+        ),
+        GetPage(
+          name: AppRouter.signup,
+          page: () => SignupView(),
           binding: AuthBinding(),
         ),
       ],
@@ -93,9 +93,6 @@ class AppPage {
       ],
     ),
 
-    // ==========================================
-    // CÁC ROUTES CỦA WEB ADMIN
-    // ==========================================
     GetPage(
       name: AppRouter.adminLogin,
       page: () => const AdminLoginView(),
@@ -121,8 +118,7 @@ class AppPage {
     ),
 
     GetPage(
-      name: AppRouter
-          .adminUsers, // Route dành cho Khách hàng/Người dùng trong Admin
+      name: AppRouter.adminUsers,
       page: () => const AdminCustomersView(),
       binding: AdminCustomersBinding(),
     ),

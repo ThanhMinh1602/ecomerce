@@ -1,9 +1,11 @@
-import 'package:ecomerce/modules/app/auth/controllers/auth_controller.dart';
+import 'package:ecomerce/modules/app/auth/controllers/login_controller.dart';
+import 'package:ecomerce/modules/app/auth/controllers/signup_controller.dart';
 import 'package:get/get.dart';
 
 class AuthBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => AuthController());
+    Get.lazyPut(() => LoginController());
+    Get.lazyPut(() => SignupController(Get.find()));
   }
 }

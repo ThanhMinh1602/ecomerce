@@ -10,7 +10,6 @@ class AuthService extends GetxService {
   final FirebaseFirestore _firestore = FirebaseProvider.firestore;
 
   late Rx<User?> firebaseUser;
-
   var currentUser = Rxn<UserModel>();
 
   @override
@@ -53,8 +52,6 @@ class AuthService extends GetxService {
         email: email,
         password: password,
       );
-      print(email);
-      print(password);
 
       String uid = credential.user!.uid;
 
@@ -64,14 +61,14 @@ class AuthService extends GetxService {
           .get();
 
       if (doc.exists) {
-        String? roleString = doc.get('role');
-        UserRole currentRole = UserRole.fromString(roleString ?? '');
+        UserModel userModel = UserModel.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
 
-        if (currentRole == UserRole.admin || currentRole == UserRole.employee) {
-          currentUser.value = UserModel.fromJson(
-            doc.data() as Map<String, dynamic>,
-            doc.id,
-          );
+        if (userModel.role == UserRole.admin ||
+            userModel.role == UserRole.employee) {
+          currentUser.value = userModel;
           return true;
         } else {
           await logout();
@@ -84,10 +81,72 @@ class AuthService extends GetxService {
         return false;
       }
     } catch (e) {
-      print("Lỗi đăng nhập: $e");
+      print("Lỗi đăng nhập quản trị: $e");
       return false;
     }
   }
 
-  Future<void> logout() async => await _auth.signOut();
+  Future<bool> loginUser(String email, String password) async {
+    try {
+      UserCredential credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String uid = credential.user!.uid;
+      await fetchUserDetails(uid);
+
+      return true;
+    } catch (e) {
+      print("Lỗi đăng nhập user: $e");
+      return false;
+    }
+  }
+
+  Future<bool> registerUser(String email, String password, String name) async {
+    try {
+      UserCredential credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String uid = credential.user!.uid;
+
+      UserModel newUser = UserModel(
+        id: uid,
+        name: name,
+        email: email,
+        role: UserRole.customer,
+        createdAt: DateTime.now(),
+      );
+
+      await _firestore
+          .collection(FirebaseProvider.users)
+          .doc(uid)
+          .set(newUser.toJson());
+
+      currentUser.value = newUser;
+
+      return true;
+    } catch (e) {
+      print("Lỗi đăng ký user: $e");
+      return false;
+    }
+  }
+
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print("Đã gửi email reset mật khẩu đến $email");
+      return true;
+    } catch (e) {
+      print("Lỗi gửi mail reset mật khẩu: $e");
+      return false;
+    }
+  }
+
+  Future<void> logout() async {
+    await _auth.signOut();
+    currentUser.value = null;
+  }
 }

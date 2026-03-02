@@ -1,8 +1,6 @@
-import 'package:ecomerce/core/constants/app_asset.dart';
-import 'package:ecomerce/core/constants/app_color.dart';
+import 'package:ecomerce/core/components/text_field/custom_text_field.dart';
 import 'package:ecomerce/core/constants/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class InputField extends StatefulWidget {
   const InputField({
@@ -12,12 +10,14 @@ class InputField extends StatefulWidget {
     required this.labelText,
     this.isPassword = false,
     this.prefixIcon,
+    this.validator,
   });
   final TextEditingController? controller;
   final String hintText;
   final String labelText;
   final bool isPassword;
   final String? prefixIcon;
+  final String? Function(String?)? validator;
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -31,6 +31,14 @@ class _InputFieldState extends State<InputField> {
       children: [
         Text(widget.labelText, style: AppStyle.smallContentBold),
         SizedBox(height: 8.0),
+        CustomTextField(
+          controller: widget.controller,
+          hintText: widget.hintText,
+          labelText: widget.labelText,
+          isPassword: widget.isPassword,
+          prefixIcon: widget.prefixIcon,
+          validator: widget.validator,
+        ),
       ],
     );
   }

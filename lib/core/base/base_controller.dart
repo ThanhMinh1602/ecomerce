@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BaseController extends GetxController {
-  // Trạng thái loading chung
   RxBool isLoading = false.obs;
 
   void showLoading() {
@@ -13,69 +12,133 @@ class BaseController extends GetxController {
     isLoading.value = false;
   }
 
-  // ==========================================
-  // 1. CÁC HÀM HIỂN THỊ THÔNG BÁO (GÓC TRÊN BÊN PHẢI)
-  // ==========================================
-
-  void showSuccess(String message, {String title = 'Thành công'}) {
+  void showSuccess(String message, {String? title}) {
     Get.snackbar(
-      title,
-      message,
-      backgroundColor: Colors.green.shade600,
-      colorText: Colors.white,
+      '',
+      '',
+      titleText: const SizedBox.shrink(),
+      messageText: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.check_circle_outline, color: Colors.white, size: 24),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              title != null ? '$title - $message' : message,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: const Color(0xFF00E676),
       snackPosition: SnackPosition.TOP,
-      maxWidth: 400, // Giới hạn chiều rộng để giống dạng Toast trên Web
-      margin: const EdgeInsets.only(
-        top: 24,
-        right: 24,
-      ), // Đẩy về góc trên bên phải
-      borderRadius: 8,
-      icon: const Icon(Icons.check_circle_outline, color: Colors.white),
+      margin: const EdgeInsets.only(top: 40, left: 24, right: 24),
+      borderRadius: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       duration: const Duration(seconds: 3),
       isDismissible: true,
       animationDuration: const Duration(milliseconds: 400),
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.15),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
     );
   }
 
-  void showError(String message, {String title = 'Lỗi'}) {
+  void showError(String message, {String? title}) {
     Get.snackbar(
-      title,
-      message,
+      '',
+      '',
+      titleText: const SizedBox.shrink(),
+      messageText: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.white, size: 24),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              title != null ? '$title - $message' : message,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Colors.redAccent.shade700,
-      colorText: Colors.white,
       snackPosition: SnackPosition.TOP,
-      maxWidth: 400,
-      margin: const EdgeInsets.only(top: 24, right: 24),
-      borderRadius: 8,
-      icon: const Icon(Icons.error_outline, color: Colors.white),
+      margin: const EdgeInsets.only(top: 40, left: 24, right: 24),
+      borderRadius: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       duration: const Duration(seconds: 4),
       isDismissible: true,
       animationDuration: const Duration(milliseconds: 400),
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.15),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
     );
   }
 
-  void showWarning(String message, {String title = 'Cảnh báo'}) {
+  void showWarning(String message, {String? title}) {
     Get.snackbar(
-      title,
-      message,
-      backgroundColor: Colors.orange.shade700,
-      colorText: Colors.white,
+      '',
+      '',
+      titleText: const SizedBox.shrink(),
+      messageText: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.warning_amber_outlined,
+            color: Colors.white,
+            size: 24,
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              title != null ? '$title - $message' : message,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.orange.shade600,
       snackPosition: SnackPosition.TOP,
-      maxWidth: 400,
-      margin: const EdgeInsets.only(top: 24, right: 24),
-      borderRadius: 8,
-      icon: const Icon(Icons.warning_amber_outlined, color: Colors.white),
+      margin: const EdgeInsets.only(top: 40, left: 24, right: 24),
+      borderRadius: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       duration: const Duration(seconds: 3),
       isDismissible: true,
       animationDuration: const Duration(milliseconds: 400),
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.15),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
     );
   }
 
-  // ==========================================
-  // 2. CÁC HÀM HIỂN THỊ DIALOG XÁC NHẬN (Giữ nguyên dạng hộp thoại)
-  // ==========================================
-
-  /// Dialog Xác nhận hành động (Ví dụ: Bạn có chắc muốn xóa?)
   void showConfirmDialog({
     required String title,
     required String message,
@@ -107,7 +170,6 @@ class BaseController extends GetxController {
     );
   }
 
-  /// Dialog Cảnh báo xóa
   void showDeleteConfirmDialog({
     required String itemName,
     required VoidCallback onConfirm,

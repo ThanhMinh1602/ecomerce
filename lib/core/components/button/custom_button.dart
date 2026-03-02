@@ -17,26 +17,47 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isActive = onPressed != null;
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(double.infinity, 55.0),
+        minimumSize: const Size(double.infinity, 55.0),
+
         backgroundColor: AppColor.orange500,
+        disabledBackgroundColor: Colors.white,
         elevation: 0,
+
+        side: isActive
+            ? BorderSide.none
+            : BorderSide(color: Colors.grey.shade300, width: 1.5),
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
       ),
       child: Row(
-        spacing: 10.0,
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10.0,
         children: [
           Text(
             btnText,
             style: GoogleFonts.robotoSerif(
               fontSize: 20.0,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+
+              color: isActive ? Colors.white : Colors.grey.shade400,
             ),
           ),
-          if (icon != null) SvgPicture.asset(icon!, color: Colors.white),
+          if (icon != null)
+            SvgPicture.asset(
+              icon!,
+
+              colorFilter: ColorFilter.mode(
+                isActive ? Colors.white : Colors.grey.shade400,
+                BlendMode.srcIn,
+              ),
+            ),
         ],
       ),
     );
