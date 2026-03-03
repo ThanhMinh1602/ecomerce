@@ -1,3 +1,4 @@
+import 'dart:io' show Platform; // Cần import cái này để dùng Platform.isWindows [cite: 2026-03-03]
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/data/binding/initial_binding.dart';
 import 'package:ecomerce/firebase_options.dart';
@@ -19,7 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String initialAppRoute = kIsWeb
+    // Logic: Nếu là Web HOẶC là Windows thì vào thẳng Admin Login [cite: 2026-03-03]
+    final bool isDesktopOrWeb = kIsWeb || (!kIsWeb && Platform.isWindows);
+
+    final String initialAppRoute = isDesktopOrWeb
         ? AppRouter.adminLogin
         : AppRouter.splash;
 
@@ -32,6 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.orange500),
         useMaterial3: true,
         scaffoldBackgroundColor: AppColor.white,
+        // Thêm font family nếu Minh đã cấu hình để giao diện Windows đẹp hơn [cite: 2026-03-03]
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: initialAppRoute,

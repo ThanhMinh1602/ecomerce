@@ -1,8 +1,10 @@
 import 'package:ecomerce/core/components/text_field/custom_text_field.dart';
+import 'package:ecomerce/core/components/text_field/search_field.dart';
 import 'package:ecomerce/core/constants/app_asset.dart' show AppAsset;
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/core/constants/app_style.dart';
 import 'package:ecomerce/modules/app/home/widgets/home_app_bar_widget.dart';
+import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecomerce/modules/app/home/controllers/home_controller.dart';
@@ -116,11 +118,15 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildSearch() {
-    return CustomTextField(
-      hintText: 'Enter the item you want to search for.',
-      labelText: '',
-      suffixIcon: AppAsset.camera,
-      prefixIcon: AppAsset.search,
+    return Hero(
+      tag: 'search-field',
+      child: Material(
+        color: Colors.transparent,
+        child: SearchField(
+          readOnly: true,
+          onTap: () => Get.toNamed(Get.currentRoute + AppRouter.search), // Chuyển sang trang Search [cite: 2026-03-03]
+        ),
+      ),
     );
   }
 

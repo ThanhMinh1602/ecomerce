@@ -9,8 +9,8 @@ class AdminLoginController extends BaseController {
 
   AdminLoginController({required this.authService});
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: 'ntminh16201@gmail.com');
+  final passwordController = TextEditingController(text: '123456');
 
   final isObscure = true.obs;
 

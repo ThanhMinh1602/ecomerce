@@ -12,6 +12,10 @@ class AppAsset {
   static const search = 'assets/icons/search_refraction.svg';
   static const plus = 'assets/icons/plus.svg';
   static const camera = 'assets/icons/camera.svg';
+  static const chevronLeft = 'assets/icons/chevron_left.svg';
+  static const shoppingCar02 = 'assets/icons/shopping_car_02.svg';
+
+
 
   //images
   static const onboarding1 = 'assets/images/onboarding_1.png';

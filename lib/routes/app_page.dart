@@ -18,6 +18,8 @@ import 'package:ecomerce/modules/app/onboarding/bindings/onboarding_binding.dart
 import 'package:ecomerce/modules/app/onboarding/views/onboarding_view.dart';
 import 'package:ecomerce/modules/app/profile/bindings/profile_binding.dart';
 import 'package:ecomerce/modules/app/profile/views/profile_view.dart';
+import 'package:ecomerce/modules/app/search/bindings/search_binding.dart';
+import 'package:ecomerce/modules/app/search/views/search_view.dart';
 import 'package:ecomerce/modules/app/splash/bindings/splash_binding.dart';
 import 'package:ecomerce/modules/app/splash/views/splash_view.dart';
 
@@ -74,6 +76,14 @@ class AppPage {
           name: AppRouter.home,
           page: () => HomeView(),
           binding: HomeBinding(),
+
+        ),
+        GetPage(
+          name: AppRouter.search,
+          page: () => SearchView(),
+          binding: SearchBinding(),
+          transition: Transition.fade,
+          transitionDuration: Duration(milliseconds: 500),
         ),
         GetPage(
           name: AppRouter.cart,

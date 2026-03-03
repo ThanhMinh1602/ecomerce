@@ -12,12 +12,14 @@ class CustomTextField extends StatefulWidget {
     required this.labelText,
     this.isPassword = false,
     this.isNumber = false, // Thuộc tính mới [cite: 2026-03-03]
-    this.maxLines = 1,      // Hỗ trợ nhập mô tả dài [cite: 2026-03-03]
+    this.maxLines = 1, // Hỗ trợ nhập mô tả dài [cite: 2026-03-03]
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
-    this.onChanged,         // Hỗ trợ search real-time [cite: 2026-03-03]
-    this.onFieldSubmitted,  // Hỗ trợ thêm nhanh Size/Color [cite: 2026-03-03]
+    this.onChanged, // Hỗ trợ search real-time [cite: 2026-03-03]
+    this.onFieldSubmitted,
+    this.onTap,
+     this.readOnly = false, // Hỗ trợ thêm nhanh Size/Color [cite: 2026-03-03]
   });
 
   final TextEditingController? controller;
@@ -31,6 +33,8 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function(String)? onFieldSubmitted;
+  final void Function()? onTap;
+  final bool readOnly;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -54,11 +58,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: widget.validator,
       maxLines: widget.maxLines,
       onChanged: widget.onChanged,
+      onTap: widget.onTap,
+      readOnly: widget.readOnly,
       onFieldSubmitted: widget.onFieldSubmitted,
       // Tự động chuyển bàn phím số nếu isNumber = true [cite: 2026-03-03]
       keyboardType: widget.isNumber
           ? const TextInputType.numberWithOptions(decimal: true)
-          : (widget.maxLines > 1 ? TextInputType.multiline : TextInputType.text),
+          : (widget.maxLines > 1
+                ? TextInputType.multiline
+                : TextInputType.text),
       // Chặn người dùng nhập chữ nếu là ô số [cite: 2026-03-03]
       inputFormatters: widget.isNumber
           ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))]
@@ -72,33 +80,50 @@ class _CustomTextFieldState extends State<CustomTextField> {
         filled: true,
         suffixIcon: widget.suffixIcon != null
             ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.5),
-          child: SvgPicture.asset(widget.suffixIcon!),
-        )
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 15.5,
+                ),
+                child: SvgPicture.asset(widget.suffixIcon!),
+              )
             : widget.isPassword
             ? InkWell(
-          onTap: () => setState(() => showPassword = !showPassword),
-          child: Icon(showPassword ? Icons.visibility_off : Icons.visibility),
-        )
+                onTap: () => setState(() => showPassword = !showPassword),
+                child: Icon(
+                  showPassword ? Icons.visibility_off : Icons.visibility,
+                ),
+              )
             : null,
         prefixIcon: widget.prefixIcon != null
             ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.5),
-          child: SvgPicture.asset(widget.prefixIcon!),
-        )
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 15.5,
+                ),
+                child: SvgPicture.asset(widget.prefixIcon!),
+              )
             : null,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.5),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 15.5,
+        ),
         // Bo tròn 100 theo thiết kế search, hoặc 12 theo thiết kế Admin [cite: 2026-03-03]
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(widget.maxLines > 1 ? 16.0 : 100.0),
+          borderRadius: BorderRadius.circular(
+            widget.maxLines > 1 ? 16.0 : 100.0,
+          ),
           borderSide: BorderSide(color: AppColor.black300, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(widget.maxLines > 1 ? 16.0 : 100.0),
+          borderRadius: BorderRadius.circular(
+            widget.maxLines > 1 ? 16.0 : 100.0,
+          ),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(widget.maxLines > 1 ? 16.0 : 100.0),
+          borderRadius: BorderRadius.circular(
+            widget.maxLines > 1 ? 16.0 : 100.0,
+          ),
           borderSide: const BorderSide(color: Colors.blueAccent, width: 2.0),
         ),
       ),

@@ -5,7 +5,7 @@ import 'package:ecomerce/data/models/category_model.dart';
 import 'package:ecomerce/data/services/product_service.dart';
 import 'package:ecomerce/data/services/category_service.dart';
 
-class SearchController extends BaseController {
+class SearchProductController extends BaseController {
   final ProductService _productService = Get.find<ProductService>();
   final CategoryService _categoryService = Get.find<CategoryService>();
 
