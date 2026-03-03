@@ -52,28 +52,37 @@ class CategoryService extends GetxService {
     }
   }
 
-  // 4. Xóa danh mục (Logic Đồng sinh cộng tử)
+  // 4. Xóa danh mục
   Future<void> deleteCategory(CategoryModel category) async {
     try {
-      String folderPath = 'ecomerce/categories/${category.id}';
-      print("Đang xóa folder: $folderPath");
+      // Giả sử thuộc tính lưu link ảnh của bạn tên là 'imageUrl'.
+      // Hãy đổi tên nếu model của bạn dùng tên khác (ví dụ: 'image', 'photoUrl'...)
+      bool hasImage = category.imageUrl != null && category.imageUrl!.isNotEmpty;
 
-      // BƯỚC 1: Xóa trên Cloudinary trước
-      bool isCloudinaryOk = await _cloudinary.deleteFolder(folderPath);
+      if (hasImage) {
+        String folderPath = 'ecomerce/categories/${category.id}';
+        print("Đang xóa folder: $folderPath");
 
-      if (!isCloudinaryOk) {
-        throw Exception(
-          "Không thể xóa thư mục trên Cloudinary. Hủy thao tác xóa Firestore.",
-        );
+        // BƯỚC 1: Xóa trên Cloudinary
+        bool isCloudinaryOk = await _cloudinary.deleteFolder(folderPath);
+
+        if (!isCloudinaryOk) {
+          throw Exception(
+            "Không thể xóa thư mục trên Cloudinary. Hủy thao tác xóa Firestore.",
+          );
+        }
+        print("✅ Đã xóa dữ liệu trên Cloudinary.");
+      } else {
+        print("⏩ Danh mục không có hình ảnh, bỏ qua bước xóa Cloudinary.");
       }
 
-      // BƯỚC 2: Chỉ khi Cloudinary xong mới xóa Firestore
+      // BƯỚC 2: Xóa dữ liệu trên Firestore
       await _firestore
           .collection(FirebaseProvider.categories)
           .doc(category.id)
           .delete();
 
-      print("✅ Đã xóa sạch cả 2 hệ thống cho ID: ${category.id}");
+      print("✅ Đã xóa hoàn tất danh mục ID: ${category.id} trên Firestore.");
     } catch (e) {
       print("❌ Lỗi quy trình xóa danh mục: $e");
       rethrow;

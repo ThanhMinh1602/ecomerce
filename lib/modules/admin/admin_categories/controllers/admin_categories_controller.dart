@@ -71,9 +71,7 @@ class AdminCategoriesController extends BaseController {
       return showWarning("Vui lòng nhập tên danh mục!");
     }
 
-    if (oldCategory == null && selectedImageBytes.value == null) {
-      return showWarning("Vui lòng chọn hình ảnh cho danh mục!");
-    }
+    Get.back();
 
     showLoading();
 
@@ -111,7 +109,7 @@ class AdminCategoriesController extends BaseController {
       }
 
       hideLoading();
-      Get.back();
+
       clearFields();
     } catch (e) {
       hideLoading();
@@ -127,7 +125,7 @@ class AdminCategoriesController extends BaseController {
         try {
           await categoryService.deleteCategory(category);
           hideLoading();
-          showSuccess("Đã xóa hoàn toàn danh mục!");
+
         } catch (e) {
           hideLoading();
           showError("Lỗi khi xóa: $e");

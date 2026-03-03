@@ -42,6 +42,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
                           'Thao tác',
                         ],
                         items: controller.products,
+                        isLoading: controller.isLoading.value,
                         rowBuilder: (product, index) => DataRow(
                           cells: [
                             DataCell(

@@ -1,12 +1,17 @@
 import 'package:ecomerce/core/base/base_controller.dart';
 import 'package:ecomerce/core/utils/validator_util.dart';
+import 'package:ecomerce/data/services/auth_service.dart';
 import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends BaseController {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final AuthService _authService;
+
+  LoginController(this._authService);
+
+  final emailController = TextEditingController(text: 'ntminh16201@gmail.com');
+  final passwordController = TextEditingController(text: '123456');
   final formKey = GlobalKey<FormState>();
 
   var isFormValid = false.obs;
@@ -26,8 +31,28 @@ class LoginController extends BaseController {
     isFormValid.value = (emailError == null && passError == null);
   }
 
-  void login() {
-    print("Đăng nhập thành công với: ${emailController.text}");
+  Future<void> login() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (formKey.currentState?.validate() ?? false) {
+      showLoading();
+
+      final isSuccess = await _authService.loginUser(
+        emailController.text.trim(),
+        passwordController.text,
+      );
+
+      hideLoading();
+
+      if (isSuccess) {
+        Get.offAllNamed(AppRouter.dashboard);
+      } else {
+        showError(
+          'Đăng nhập thất bại',
+          title: 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.',
+        );
+      }
+    }
   }
 
   Future<void> onTapSignup() async {
@@ -40,6 +65,20 @@ class LoginController extends BaseController {
         'Đăng ký thành công',
         title: 'Tài khoản với email $result đã sẵn sàng.',
       );
+
+      _checkValidation();
+    }
+  }
+
+  Future<void> onTapForgot() async {
+    final result = await Get.toNamed(
+      Get.currentRoute + AppRouter.forgotPassword,
+    );
+    print('result123: $result');
+    if (result != null) {
+      emailController.text = result;
+
+      showSuccess('Gửi mail thành công', title: 'Kiểm tra $result');
 
       _checkValidation();
     }
