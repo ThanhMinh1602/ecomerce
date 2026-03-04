@@ -8,10 +8,10 @@ class HomeController extends BaseController {
   final ProductService _productService = Get.find<ProductService>();
   final CategoryService _categoryService = Get.find<CategoryService>();
 
-  // Danh sách quan sát (Rx)
   RxList<ProductModel> bestSellers = <ProductModel>[].obs;
   RxList<ProductModel> comboProducts = <ProductModel>[].obs;
   final RxString currentTab = 'Best seller'.obs;
+  RxInt currentBannerIndex = 0.obs;
 
   @override
   void onInit() {
@@ -20,28 +20,35 @@ class HomeController extends BaseController {
       bestSellers.bindStream(_productService.streamFilteredProducts(tabName));
     });
 
-    // Khởi tạo stream mặc định
-    bestSellers.bindStream(_productService.streamFilteredProducts(currentTab.value));
+    bestSellers.bindStream(
+      _productService.streamFilteredProducts(currentTab.value),
+    );
 
-    // 2. Tự động tìm danh mục "Combo" và lấy sản phẩm tương ứng [cite: 2026-03-03]
     _initComboStream();
   }
+
   void changeTab(String tabName) {
     currentTab.value = tabName;
   }
+
   void _initComboStream() {
-    _categoryService.streamCategories().listen((categories) {
-      final comboCat = categories.firstWhereOrNull(
-              (c) => c.name.toLowerCase().contains('combo')
+
+    _categoryService.streamCategories().listen((categoryList) {
+
+      final categoryCombo = categoryList.firstWhereOrNull(
+            (category) => category.name.toLowerCase() == 'combo',
       );
-      if (comboCat != null) {
+
+      if (categoryCombo != null) {
+
         comboProducts.bindStream(
-            _productService.streamProductsByCategory(comboCat.id)
+          _productService.streamProductsByCategory(categoryCombo.name),
         );
+      } else {
+
+        comboProducts.clear();
+        print("Cảnh báo: Không tìm thấy Category nào có tên là 'Combo' trên hệ thống.");
       }
     });
-    print('comboProducts: ${comboProducts.value}');
   }
-
-
 }

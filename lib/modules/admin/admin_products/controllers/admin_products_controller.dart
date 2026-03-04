@@ -47,10 +47,10 @@ class AdminProductsController extends BaseController {
   final RxString currentTab = 'Best seller'.obs;
 
   RxList<String> colors = <String>[
-    '0xFF000000', // Đen
-    '0xFFFFFFFF', // Trắng
-    '0xFF808080', // Xám
-    '0xFFF27A24', // Cam thương hiệu
+    '0xFF000000',
+    '0xFFFFFFFF',
+    '0xFF808080',
+    '0xFFF27A24',
   ].obs;
 
   @override
@@ -75,7 +75,6 @@ class AdminProductsController extends BaseController {
     super.onClose();
   }
 
-  /// Logic: Tách chuỗi bằng dấu phẩy và "ép" định dạng 0xFF [cite: 2026-03-03]
   void addColors(String input) {
     if (input.trim().isEmpty) return;
 
@@ -85,11 +84,9 @@ class AdminProductsController extends BaseController {
     for (var raw in rawInputs) {
       String item = raw.trim();
 
-      // BƯỚC 1: Validate từng mã màu [cite: 2026-03-03]
       String? error = ValidatorUtil.validateHexColor(item);
 
       if (error == null) {
-        // BƯỚC 2: Chuẩn hóa về định dạng 0xFF... [cite: 2026-03-03]
         String clean = item
             .toUpperCase()
             .replaceAll('#', '')
@@ -105,7 +102,6 @@ class AdminProductsController extends BaseController {
       }
     }
 
-    // Thông báo nếu có mã màu sai định dạng [cite: 2026-03-03]
     if (invalidColors.isNotEmpty) {
       showWarning("Mã không hợp lệ: ${invalidColors.join(', ')}");
     }
@@ -115,25 +111,18 @@ class AdminProductsController extends BaseController {
 
   void removeColor(String color) => colors.remove(color);
 
-  // Trong AdminProductsController
   void addSize(String input) {
     if (input.trim().isEmpty) return;
 
-    // 1. Tách chuỗi dựa trên dấu phẩy [cite: 2026-03-03]
     List<String> rawSizes = input.split(',');
 
     for (var s in rawSizes) {
-      // 2. Làm sạch khoảng trắng và viết hoa [cite: 2026-03-03]
       String cleanSize = s.trim().toUpperCase();
 
-      // 3. Kiểm tra rỗng và trùng lặp trước khi thêm vào RxList
       if (cleanSize.isNotEmpty && !sizes.contains(cleanSize)) {
         sizes.add(cleanSize);
       }
     }
-
-    // 4. Xóa nội dung input sau khi xử lý xong
-    // sizeInputController.clear();
   }
 
   void removeSize(String size) => sizes.remove(size);
@@ -178,14 +167,13 @@ class AdminProductsController extends BaseController {
     oldPriceController.clear();
     stockController.clear();
     sizes.clear();
-    colors.clear(); // Reset màu sắc [cite: 2026-03-03]
+    colors.clear();
     existingImages.clear();
     selectedImagesBytes.clear();
     selectedImageNames.clear();
     selectedCategoryId.value = null;
     uploadProgress.value = 0.0;
 
-    // Khởi tạo lại 4 màu mặc định cho sản phẩm mới nếu muốn [cite: 2026-03-03]
     colors.addAll(['0xFF000000', '0xFFFFFFFF', '0xFF808080', '0xFFF27A24']);
   }
 
@@ -197,7 +185,6 @@ class AdminProductsController extends BaseController {
     oldPriceController.text = product.oldPrice?.toString() ?? '';
     stockController.text = product.stock.toString();
 
-    // Load chính xác danh sách Size và Color của sản phẩm đang sửa [cite: 2026-03-03]
     sizes.assignAll(product.sizes);
     colors.assignAll(product.colors);
 
@@ -208,7 +195,6 @@ class AdminProductsController extends BaseController {
   void removeExistingImage(int index) => existingImages.removeAt(index);
 
   Future<void> saveProduct({ProductModel? oldProduct}) async {
-    // 1. Validate Form & Danh sách bắt buộc [cite: 2026-03-03]
     if (!formKey.currentState!.validate()) {
       showWarning("Vui lòng kiểm tra lại các thông tin báo đỏ!");
       return;
@@ -234,10 +220,9 @@ class AdminProductsController extends BaseController {
       final String uuid = oldProduct?.id ?? AppUtils.generateId();
       List<String> newUploadedIds = [];
 
-      // 2. Xử lý Upload ảnh mới lên Cloudinary (nếu có) [cite: 2026-03-03]
       if (selectedImagesBytes.isNotEmpty) {
         final String folder = 'products/$uuid';
-        // Upload theo lô (batch) để tránh quá tải request [cite: 2026-03-03]
+
         newUploadedIds = await cloudinaryService.uploadMultipleImages(
           filesBytes: selectedImagesBytes,
           fileNames: selectedImageNames,
@@ -245,36 +230,31 @@ class AdminProductsController extends BaseController {
         );
       }
 
-      // 3. Hợp nhất ảnh cũ (còn giữ lại) và ảnh mới [cite: 2026-03-03]
       List<String> finalImages = [...existingImages, ...newUploadedIds];
 
-      // 4. Tạo đối tượng ProductModel chuẩn hóa
       final product = ProductModel(
         id: uuid,
         name: nameController.text.trim(),
         description: descController.text.trim(),
         price: double.parse(priceController.text.trim()),
         oldPrice: double.tryParse(oldPriceController.text.trim()),
-        // Giữ lại các chỉ số cũ khi cập nhật, hoặc init 0 nếu tạo mới [cite: 2026-03-03]
+
         rating: oldProduct?.rating ?? 0.0,
         reviewCount: oldProduct?.reviewCount ?? 0,
         soldCount: oldProduct?.soldCount ?? 0,
         sizes: sizes.toList(),
         colors: colors.toList(),
-        // Đã cập nhật lấy từ RxList colors [cite: 2026-03-03]
+
         images: finalImages,
         stock: int.parse(stockController.text.trim()),
         categoryId: selectedCategoryId.value!,
         createdAt: oldProduct?.createdAt ?? DateTime.now(),
       );
 
-      // 5. Gọi Service thực hiện lưu trữ [cite: 2026-03-03]
       if (oldProduct == null) {
         await productService.addProduct(product);
-        showSuccess("Thêm sản phẩm thành công!");
       } else {
         await productService.updateProduct(product.id, product.toJson());
-        showSuccess("Cập nhật sản phẩm thành công!");
       }
 
       hideLoading();

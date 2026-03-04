@@ -188,7 +188,7 @@ class ProductFormDialog extends GetView<AdminProductsController> {
         fillColor: const Color(0xFFF9FAFB),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      items: controller.categories.map((cat) => DropdownMenuItem(value: cat.id, child: Text(cat.name))).toList(),
+      items: controller.categories.map((cat) => DropdownMenuItem(value: cat.name, child: Text(cat.name))).toList(),
       onChanged: (val) => controller.selectedCategoryId.value = val,
     ));
   }

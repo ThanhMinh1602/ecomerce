@@ -37,6 +37,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
                           'Ảnh',
                           'Tên sản phẩm',
                           'Danh mục',
+                          'Phân loại',
                           'Giá',
                           'Kho',
                           'Thao tác',
@@ -57,6 +58,10 @@ class AdminProductsView extends GetView<AdminProductsController> {
                               ),
                             ),
                             DataCell(_buildCategoryName(product.categoryId)),
+
+                            DataCell(
+                              _buildVariantCell(product.colors, product.sizes),
+                            ),
                             DataCell(
                               Text(
                                 NumberFormat.currency(
@@ -96,7 +101,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
           ElevatedButton.icon(
             onPressed: () {
               controller.clearFields();
-              // Gọi Widget Dialog mới
+
               Get.dialog(const ProductFormDialog(), barrierDismissible: false);
             },
             icon: const Icon(Icons.add, color: Colors.white),
@@ -110,8 +115,6 @@ class AdminProductsView extends GetView<AdminProductsController> {
       ),
     );
   }
-
-  // ... (Giữ nguyên các hàm _buildCategoryName, _buildImageCell, _cardDecoration của bạn)
 
   Widget _buildActionButtons(ProductModel product) {
     return Row(
@@ -139,10 +142,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
   }
 
   Widget _buildCategoryName(String categoryId) {
-    final cat = controller.categories.firstWhereOrNull(
-      (c) => c.id == categoryId,
-    );
-    return Text(cat?.name ?? 'N/A', style: TextStyle(color: Colors.grey[600]));
+    return Text(categoryId ?? 'N/A', style: TextStyle(color: Colors.grey[600]));
   }
 
   Widget _buildImageCell(String? imageUrl) {
@@ -156,6 +156,50 @@ class AdminProductsView extends GetView<AdminProductsController> {
               height: 50,
             )
           : const Icon(Icons.image, size: 40),
+    );
+  }
+
+  Widget _buildVariantCell(List<String> colors, List<String> sizes) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (colors.isNotEmpty)
+          Wrap(
+            spacing: 4,
+            children: colors
+                .map(
+                  (c) => Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Color(int.parse(c)),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+
+        if (colors.isNotEmpty && sizes.isNotEmpty) const SizedBox(height: 6),
+
+        if (sizes.isNotEmpty)
+          Text(
+            "Sizes: ${sizes.join(', ')}",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+        if (colors.isEmpty && sizes.isEmpty)
+          const Text('N/A', style: TextStyle(color: Colors.grey, fontSize: 12)),
+      ],
     );
   }
 }

@@ -55,11 +55,8 @@ class VerticalProductWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4.0),
-
-          // 3. Phân loại sản phẩm (Ví dụ: Men's Jacket)
-          // Sử dụng categoryId hoặc mô tả ngắn để khớp với subtitle trong hình
           Text(
-            product!.description, // Hoặc trường category name nếu có
+            product!.categoryId,
             style: AppStyle.smallContentSemiBold.copyWith(
               color: AppColor.k949494,
               fontSize: 12.0,

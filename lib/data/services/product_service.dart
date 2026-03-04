@@ -106,4 +106,29 @@ class ProductService extends GetxService {
           .toList(),
     );
   }
+
+  Stream<List<ProductModel>> streamSearchFlexible(String query) {
+    return streamProducts().map((allProducts) {
+      if (query.isEmpty) return [];
+
+      final lowerQuery = query.toLowerCase();
+
+      return allProducts.where((product) {
+        final nameMatch = product.name.toLowerCase().contains(lowerQuery);
+        final descMatch = product.description.toLowerCase().contains(lowerQuery);
+        return nameMatch || descMatch;
+      }).toList();
+    });
+  }
+
+  Stream<List<ProductModel>> streamProposeProducts() {
+    return _db
+        .collection('products')
+        .orderBy('soldCount', descending: true) // Gợi ý sản phẩm bán chạy
+        .limit(10)
+        .snapshots()
+        .map((q) => q.docs
+        .map((doc) => ProductModel.fromJson(doc.data(), doc.id))
+        .toList());
+  }
 }

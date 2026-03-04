@@ -1,7 +1,7 @@
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/core/constants/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Thêm để dùng FilteringTextInputFormatter
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -11,15 +11,16 @@ class CustomTextField extends StatefulWidget {
     required this.hintText,
     required this.labelText,
     this.isPassword = false,
-    this.isNumber = false, // Thuộc tính mới [cite: 2026-03-03]
-    this.maxLines = 1, // Hỗ trợ nhập mô tả dài [cite: 2026-03-03]
+    this.isNumber = false,
+    this.maxLines = 1,
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
-    this.onChanged, // Hỗ trợ search real-time [cite: 2026-03-03]
+    this.onChanged,
     this.onFieldSubmitted,
     this.onTap,
-     this.readOnly = false, // Hỗ trợ thêm nhanh Size/Color [cite: 2026-03-03]
+    this.readOnly = false,
+    this.autofocus = false,
   });
 
   final TextEditingController? controller;
@@ -35,6 +36,7 @@ class CustomTextField extends StatefulWidget {
   final void Function(String)? onFieldSubmitted;
   final void Function()? onTap;
   final bool readOnly;
+  final bool autofocus;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -53,7 +55,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      // Nếu là mật khẩu thì ẩn text, nếu không thì hiện bình thường
+
       obscureText: widget.isPassword ? showPassword : false,
       validator: widget.validator,
       maxLines: widget.maxLines,
@@ -61,13 +63,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onTap: widget.onTap,
       readOnly: widget.readOnly,
       onFieldSubmitted: widget.onFieldSubmitted,
-      // Tự động chuyển bàn phím số nếu isNumber = true [cite: 2026-03-03]
+      autofocus: widget.autofocus,
       keyboardType: widget.isNumber
           ? const TextInputType.numberWithOptions(decimal: true)
           : (widget.maxLines > 1
                 ? TextInputType.multiline
                 : TextInputType.text),
-      // Chặn người dùng nhập chữ nếu là ô số [cite: 2026-03-03]
+
       inputFormatters: widget.isNumber
           ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))]
           : null,
@@ -107,7 +109,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           horizontal: 20.0,
           vertical: 15.5,
         ),
-        // Bo tròn 100 theo thiết kế search, hoặc 12 theo thiết kế Admin [cite: 2026-03-03]
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(
             widget.maxLines > 1 ? 16.0 : 100.0,

@@ -10,6 +10,7 @@ class SearchField extends StatelessWidget {
     this.onFieldSubmitted,
     this.onTap,
     this.readOnly = false, // Mặc định là cho phép nhập
+    this.autofocus = false,
   });
 
   final TextEditingController? controller;
@@ -17,19 +18,22 @@ class SearchField extends StatelessWidget {
   final void Function(String)? onFieldSubmitted;
   final VoidCallback? onTap;
   final bool readOnly;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
     return CustomTextField(
       controller: controller,
       hintText: 'Enter the item you want to search for.',
-      labelText: '', // Để trống label theo thiết kế
+      labelText: '',
+      // Để trống label theo thiết kế
       prefixIcon: AppAsset.search,
       suffixIcon: AppAsset.camera,
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
       onTap: onTap,
       readOnly: readOnly,
+      autofocus: autofocus,
     );
   }
 }
