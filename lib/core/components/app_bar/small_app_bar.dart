@@ -6,7 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SmallAppBar({super.key});
+  const SmallAppBar({super.key,  this.title});
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,8 @@ class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => Get.back(),
             ),
             const SizedBox(width: 19.0),
-            Text('Search', style: AppStyle.contentBold),
+            if(title != null)
+            Text(title!, style: AppStyle.contentBold),
             Spacer(),
             _buildCardIcon(),
           ],

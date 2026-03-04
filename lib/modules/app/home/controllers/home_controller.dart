@@ -1,3 +1,4 @@
+import 'package:ecomerce/routes/app_router.dart';
 import 'package:get/get.dart';
 import 'package:ecomerce/core/base/base_controller.dart';
 import 'package:ecomerce/data/models/product_model.dart';
@@ -51,4 +52,15 @@ class HomeController extends BaseController {
       }
     });
   }
+   void onTapProductDetail(
+       ProductModel product,String heroTagPrefix
+       ){
+     Get.toNamed(
+       Get.currentRoute + AppRouter.productDetails,
+       arguments: {
+     'product': product,
+     'heroTag': '$heroTagPrefix${product!.id}', // Truyền đúng cái tag đang dùng
+     },
+     );
+   }
 }
