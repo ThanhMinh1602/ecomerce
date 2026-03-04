@@ -85,7 +85,7 @@ class AppPage {
           page: () => SearchView(),
           binding: SearchBinding(),
           transition: Transition.fade,
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: Duration(milliseconds: 300),
         ),
         GetPage(
           name: AppRouter.productDetails,

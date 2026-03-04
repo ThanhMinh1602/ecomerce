@@ -14,6 +14,7 @@ class AppAsset {
   static const camera = 'assets/icons/camera.svg';
   static const chevronLeft = 'assets/icons/chevron_left.svg';
   static const shoppingCar02 = 'assets/icons/shopping_car_02.svg';
+  static const star01 = 'assets/icons/star_01.svg';
 
 
 

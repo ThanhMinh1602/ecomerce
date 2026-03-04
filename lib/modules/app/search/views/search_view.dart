@@ -18,7 +18,6 @@ class SearchView extends GetView<SearchProductController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-
             _buildSearch(),
             const SizedBox(height: 24),
             _buildCategoryItemList(),
