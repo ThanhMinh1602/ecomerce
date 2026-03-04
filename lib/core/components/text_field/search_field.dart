@@ -9,7 +9,7 @@ class SearchField extends StatelessWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.onTap,
-    this.readOnly = false, // Mặc định là cho phép nhập
+    this.readOnly = false,
     this.autofocus = false,
   });
 
@@ -25,8 +25,6 @@ class SearchField extends StatelessWidget {
     return CustomTextField(
       controller: controller,
       hintText: 'Enter the item you want to search for.',
-      labelText: '',
-      // Để trống label theo thiết kế
       prefixIcon: AppAsset.search,
       suffixIcon: AppAsset.camera,
       onChanged: onChanged,

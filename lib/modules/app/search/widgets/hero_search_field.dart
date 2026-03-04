@@ -1,10 +1,10 @@
 import 'package:ecomerce/core/components/text_field/search_field.dart';
-import 'package:ecomerce/routes/app_router.dart';
+import 'package:ecomerce/modules/app/search/controllers/search_product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeSearchField extends StatelessWidget {
-  const HomeSearchField({super.key});
+class HeroSearchField extends GetView<SearchProductController> {
+  const HeroSearchField({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +13,9 @@ class HomeSearchField extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: SearchField(
-          readOnly: true,
-
-          onTap: () => Get.toNamed(Get.currentRoute + AppRouter.search),
+          autofocus: true,
+          controller: controller.searchController,
+          onChanged: (value) => controller.onSearchChanged(value),
         ),
       ),
     );

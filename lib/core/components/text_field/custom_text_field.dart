@@ -9,7 +9,7 @@ class CustomTextField extends StatefulWidget {
     super.key,
     this.controller,
     required this.hintText,
-    required this.labelText,
+     this.labelText,
     this.isPassword = false,
     this.isNumber = false,
     this.maxLines = 1,
@@ -25,7 +25,7 @@ class CustomTextField extends StatefulWidget {
 
   final TextEditingController? controller;
   final String hintText;
-  final String labelText;
+  final String? labelText;
   final bool isPassword;
   final bool isNumber;
   final int maxLines;
@@ -75,7 +75,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
-        labelText: widget.labelText.isEmpty ? null : widget.labelText,
+        labelText:  widget.labelText,
         hintText: widget.hintText,
         hintStyle: AppStyle.smallContentRegular,
         fillColor: const Color(0xFFF9FAFB),
@@ -126,7 +126,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           borderRadius: BorderRadius.circular(
             widget.maxLines > 1 ? 16.0 : 100.0,
           ),
-          borderSide: const BorderSide(color: Colors.blueAccent, width: 2.0),
+          borderSide: const BorderSide(color: AppColor.black500, width: 1.5),
         ),
       ),
     );

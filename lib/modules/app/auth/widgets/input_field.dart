@@ -34,7 +34,6 @@ class _InputFieldState extends State<InputField> {
         CustomTextField(
           controller: widget.controller,
           hintText: widget.hintText,
-          labelText: widget.labelText,
           isPassword: widget.isPassword,
           prefixIcon: widget.prefixIcon,
           validator: widget.validator,

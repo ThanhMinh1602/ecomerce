@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,16 +18,20 @@ class CustomLoadingOverlay extends StatelessWidget {
     return Stack(
       children: [
         child,
+
         Obx(() {
           if (isLoading.value) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.white.withOpacity(0.7),
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: AppColor.orange500,
-                  strokeWidth: 4.0,
+            return Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  color: Colors.white.withOpacity(0.3),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColor.orange500,
+                      strokeWidth: 4.0,
+                    ),
+                  ),
                 ),
               ),
             );
