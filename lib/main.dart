@@ -35,13 +35,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.orange500),
         useMaterial3: true,
         scaffoldBackgroundColor: AppColor.white,
-        // Thêm font family nếu Minh đã cấu hình để giao diện Windows đẹp hơn [cite: 2026-03-03]
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: initialAppRoute,
       initialBinding: InitialBinding(),
       getPages: AppPage.page,
       defaultTransition: appTransition,
+      transitionDuration: Duration(milliseconds: 300),
     );
   }
 }

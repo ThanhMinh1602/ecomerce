@@ -56,7 +56,7 @@ class HomeController extends BaseController {
        ProductModel product,String heroTagPrefix
        ){
      Get.toNamed(
-       Get.currentRoute + AppRouter.productDetails,
+      AppRouter.productDetails,
        preventDuplicates: false,
        arguments: {
      'product': product,

@@ -1,5 +1,6 @@
 import 'package:ecomerce/modules/app/dashboard/controllers/dashboard_controller.dart';
 import 'package:ecomerce/modules/app/home/controllers/home_controller.dart';
+import 'package:ecomerce/modules/app/notification/controllers/notification_controller.dart';
 import 'package:get/get.dart';
 
 class DashboardBinding extends Bindings {
@@ -7,5 +8,6 @@ class DashboardBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => DashboardController());
     Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => NotificationController());
   }
 }

@@ -78,7 +78,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         labelText:  widget.labelText,
         hintText: widget.hintText,
         hintStyle: AppStyle.smallContentRegular,
-        fillColor: const Color(0xFFF9FAFB),
+        fillColor: const Color(0xffffffff),
         filled: true,
         suffixIcon: widget.suffixIcon != null
             ? Padding(

@@ -15,7 +15,7 @@ class HomeSearchField extends StatelessWidget {
         child: SearchField(
           readOnly: true,
 
-          onTap: () => Get.toNamed(Get.currentRoute + AppRouter.search),
+          onTap: () => Get.toNamed(AppRouter.search),
         ),
       ),
     );

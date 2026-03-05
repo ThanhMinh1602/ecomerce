@@ -16,7 +16,20 @@ class AppAsset {
   static const shoppingCar02 = 'assets/icons/shopping_car_02.svg';
   static const star01 = 'assets/icons/star_01.svg';
 
+  //navbar
+  static const bell03 = 'assets/icons/bell_03.svg';
+  static const bell03Active = 'assets/icons/bell_03_active.svg';
+  static const home05 = 'assets/icons/home_05.svg';
+  static const home05Active = 'assets/icons/home_05_active.svg';
+  static const shoppingCart01 = 'assets/icons/shopping_cart_01.svg';
+  static const shoppingCart01Active = 'assets/icons/shopping_cart_01_active.svg';
+  static const user03 = 'assets/icons/user_03.svg';
+  static const user03Active = 'assets/icons/user_03_active.svg';
 
+  //notifi
+  static const yourOrder = 'assets/icons/your_order.png';
+  static const update = 'assets/icons/update.png';
+  static const specialDiscount = 'assets/icons/special_discount.png';
 
   //images
   static const onboarding1 = 'assets/images/onboarding_1.png';

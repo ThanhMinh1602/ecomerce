@@ -8,6 +8,7 @@ class AppRouter {
   static const String home = '/home';
   static const String dashboard = '/dashboard';
   static const String notification = '/notification';
+  static const String notificationMenuDetail = '/notification-menu-detail';
   static const String cart = '/cart';
   static const String profile = '/profile';
   static const String search = '/search';

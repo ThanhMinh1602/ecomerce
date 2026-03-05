@@ -13,6 +13,7 @@ import 'package:ecomerce/modules/app/dashboard/views/dashboard_view.dart';
 import 'package:ecomerce/modules/app/home/views/home_view.dart';
 import 'package:ecomerce/modules/app/home/bindings/home_binding.dart';
 import 'package:ecomerce/modules/app/notification/bindings/notification_binding.dart';
+import 'package:ecomerce/modules/app/notification/views/notification_menu_detail_view.dart';
 import 'package:ecomerce/modules/app/notification/views/notification_view.dart';
 import 'package:ecomerce/modules/app/onboarding/bindings/onboarding_binding.dart';
 import 'package:ecomerce/modules/app/onboarding/views/onboarding_view.dart';
@@ -73,45 +74,46 @@ class AppPage {
       name: AppRouter.dashboard,
       page: () => const DashboardView(),
       binding: DashboardBinding(),
-      children: [
-        GetPage(
-          name: AppRouter.home,
-          page: () => HomeView(),
-          binding: HomeBinding(),
-
-        ),
-        GetPage(
-          name: AppRouter.search,
-          page: () => SearchView(),
-          binding: SearchBinding(),
-          transition: Transition.fade,
-          transitionDuration: Duration(milliseconds: 300),
-        ),
-        GetPage(
-          name: AppRouter.productDetails,
-          page: () => ProductDetailView(),
-          binding: ProductDetailBinding(),
-          transition: Transition.fade,
-          transitionDuration: Duration(milliseconds: 300),
-        ),
-        GetPage(
-          name: AppRouter.cart,
-          page: () => const CartView(),
-          binding: CartBinding(),
-        ),
-        GetPage(
-          name: AppRouter.notification,
-          page: () => const NotificationView(),
-          binding: NotificationBinding(),
-        ),
-        GetPage(
-          name: AppRouter.profile,
-          page: () => const ProfileView(),
-          binding: ProfileBinding(),
-        ),
-      ],
     ),
-
+    GetPage(
+      name: AppRouter.home,
+      page: () => HomeView(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRouter.search,
+      page: () => SearchView(),
+      binding: SearchBinding(),
+      transition: Transition.fade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: AppRouter.productDetails,
+      page: () => ProductDetailView(),
+      binding: ProductDetailBinding(),
+      transition: Transition.fade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: AppRouter.cart,
+      page: () => const CartView(),
+      binding: CartBinding(),
+    ),
+    GetPage(
+      name: AppRouter.notification,
+      page: () => const NotificationView(),
+      binding: NotificationBinding(),
+    ),
+    GetPage(
+      name: AppRouter.notificationMenuDetail,
+      page: () => const NotificationMenuDetailView(),
+      binding: NotificationBinding(),
+    ),
+    GetPage(
+      name: AppRouter.profile,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
     GetPage(
       name: AppRouter.adminLogin,
       page: () => const AdminLoginView(),

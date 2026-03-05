@@ -1,4 +1,5 @@
 import 'package:ecomerce/modules/app/home/views/home_view.dart';
+import 'package:ecomerce/modules/app/notification/views/notification_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,37 +12,26 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Obx(
+      extendBody: true,
+      body: Obx(
             () => IndexedStack(
-              index: controller.selectedIndex.value,
-              children: [
-                HomeView(),
-                Container(
-                  color: Colors.white,
-                  child: const Center(child: Text("Cart Page")),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: const Center(child: Text("Notifications")),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: const Center(child: Text("Profile Page")),
-                ),
-              ],
+          index: controller.selectedIndex.value,
+          children: [
+            HomeView(),
+            Container(
+              color: Colors.white,
+              child: const Center(child: Text("Cart Page")),
             ),
-          ),
-
-          Positioned(
-            bottom: 38,
-            left: 16.0,
-            right: 16.0,
-            child: const NavigationBarWidget(),
-          ),
-        ],
+            NotificationView(
+            ),
+            Container(
+              color: Colors.white,
+              child: const Center(child: Text("Profile Page")),
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: const NavigationBarWidget(),
     );
   }
 }

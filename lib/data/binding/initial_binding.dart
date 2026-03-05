@@ -13,7 +13,6 @@ class InitialBinding extends Bindings {
     Get.put<CloudinaryService>(CloudinaryService(), permanent: true);
     Get.put<ProductService>(ProductService(), permanent: true);
     Get.put<CategoryService>(CategoryService(), permanent: true);
-
     Get.put<CartService>(CartService(), permanent: true);
     Get.put<OrderService>(OrderService(), permanent: true);
   }

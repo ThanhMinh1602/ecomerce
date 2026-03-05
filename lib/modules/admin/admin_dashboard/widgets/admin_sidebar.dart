@@ -2,15 +2,12 @@ import 'package:ecomerce/data/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecomerce/routes/app_router.dart';
-// Nhớ import AuthService của bạn để gọi hàm logout
-// import 'package:ecomerce/core/services/auth_service.dart';
 
 class AdminSidebar extends StatelessWidget {
   const AdminSidebar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Lấy route hiện tại để highlight menu đang được chọn
     final currentRoute = Get.currentRoute;
 
     return Container(
@@ -18,7 +15,6 @@ class AdminSidebar extends StatelessWidget {
       color: const Color(0xFF1E1E2D),
       child: Column(
         children: [
-          // Phần Logo / Tiêu đề
           Container(
             height: 70,
             alignment: Alignment.center,
