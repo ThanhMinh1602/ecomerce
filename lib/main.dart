@@ -1,4 +1,4 @@
-import 'dart:io' show Platform; // Cần import cái này để dùng Platform.isWindows [cite: 2026-03-03]
+import 'dart:io' show Platform;
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/data/binding/initial_binding.dart';
 import 'package:ecomerce/firebase_options.dart';
@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Logic: Nếu là Web HOẶC là Windows thì vào thẳng Admin Login [cite: 2026-03-03]
     final bool isDesktopOrWeb = kIsWeb || (!kIsWeb && Platform.isWindows);
 
     final String initialAppRoute = isDesktopOrWeb

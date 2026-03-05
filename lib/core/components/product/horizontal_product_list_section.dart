@@ -7,12 +7,13 @@ class HorizontalProductListSection extends StatelessWidget {
   final String title;
   final List<ProductModel> products;
   final bool isLoading;
+  final VerticalProductType? type;
 
   const HorizontalProductListSection({
     super.key,
     required this.title,
     required this.products,
-    this.isLoading = false, 
+    this.isLoading = false,  this.type = VerticalProductType.home,
   });
 
   @override
@@ -33,7 +34,7 @@ class HorizontalProductListSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
             itemBuilder: (context, index) {
-              return VerticalProductWidget(product: products[index]);
+              return VerticalProductWidget(product: products[index], type: type!,);
             },
             separatorBuilder: (_, __) => const SizedBox(width: 16.0),
           ),

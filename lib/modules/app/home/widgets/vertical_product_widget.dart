@@ -6,20 +6,21 @@ import 'package:ecomerce/data/models/product_model.dart';
 import 'package:ecomerce/modules/app/home/controllers/home_controller.dart';
 import 'package:ecomerce/modules/app/home/widgets/add_to_cart_button.dart';
 import 'package:ecomerce/modules/app/product_detail/controllers/product_detail_controller.dart';
-import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
+enum VerticalProductType{ home, detail}
 class VerticalProductWidget extends StatelessWidget {
   const VerticalProductWidget({
     super.key,
     this.product,
-    this.heroTagPrefix = 'vertical_',
+    this.heroTagPrefix = 'vertical_',  this.type = VerticalProductType.home,
+
   });
 
   final ProductModel? product;
   final String heroTagPrefix;
+  final VerticalProductType type;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,17 @@ class VerticalProductWidget extends StatelessWidget {
     if (product == null) return const SizedBox();
 
     return GestureDetector(
-      onTap: () => Get.find<HomeController>().onTapProductDetail(product!, heroTagPrefix),
+      onTap: () {
+        if(type == VerticalProductType.home){
+          Get.find<HomeController>().onTapProductDetail(product!, heroTagPrefix);
+        }
+        if(type == VerticalProductType.detail){
+        Get.find<ProductDetailController>().loadNewProduct(
+        product!, // Truyền product mới vào
+        'propose_${product!.id}', // Tạo một hero tag mới
+        );
+        }
+      },
       child: CustomCard(
         width: 155,
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),

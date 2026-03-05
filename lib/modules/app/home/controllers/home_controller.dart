@@ -57,9 +57,10 @@ class HomeController extends BaseController {
        ){
      Get.toNamed(
        Get.currentRoute + AppRouter.productDetails,
+       preventDuplicates: false,
        arguments: {
      'product': product,
-     'heroTag': '$heroTagPrefix${product!.id}', // Truyền đúng cái tag đang dùng
+     'heroTag': '$heroTagPrefix${product!.id}',
      },
      );
    }

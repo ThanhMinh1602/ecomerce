@@ -2,11 +2,16 @@ import 'package:ecomerce/core/base/base_controller.dart';
 import 'package:ecomerce/data/models/cart_model.dart';
 import 'package:ecomerce/data/models/product_model.dart';
 import 'package:ecomerce/data/services/cart_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductDetailController extends BaseController {
-  late ProductModel product;
-  late String heroTag;
+  // 1. Biến dữ liệu thành Rx để UI tự động render lại khi có sản phẩm mới
+  late Rx<ProductModel> currentProduct;
+  late RxString currentHeroTag;
+
+  // 2. Thêm ScrollController để điều khiển cuộn lên đầu trang
+  final ScrollController scrollController = ScrollController();
 
   final CartService _cartService = Get.find<CartService>();
 
@@ -21,15 +26,47 @@ class ProductDetailController extends BaseController {
     super.onInit();
 
     if (Get.arguments != null && Get.arguments is Map) {
-      product = Get.arguments['product'] as ProductModel;
-      heroTag = Get.arguments['heroTag'] as String;
+      final p = Get.arguments['product'] as ProductModel;
+      final t = Get.arguments['heroTag'] as String;
 
-      if (product.colors.isNotEmpty) {
-        selectedColor.value = product.colors.first;
-      }
-      if (product.sizes.isNotEmpty) {
-        selectedSize.value = product.sizes.first;
-      }
+      currentProduct = p.obs;
+      currentHeroTag = t.obs;
+
+      _initProductData(p);
+    }
+  }
+
+  // Tách hàm khởi tạo dữ liệu mặc định (màu, size, số lượng)
+  void _initProductData(ProductModel p) {
+    if (p.colors.isNotEmpty) {
+      selectedColor.value = p.colors.first;
+    } else {
+      selectedColor.value = '';
+    }
+
+    if (p.sizes.isNotEmpty) {
+      selectedSize.value = p.sizes.first;
+    } else {
+      selectedSize.value = '';
+    }
+
+    quantity.value = 1; // Reset số lượng về 1
+  }
+
+  // 3. HÀM QUAN TRỌNG: Gọi hàm này khi bấm vào sản phẩm đề xuất
+  void loadNewProduct(ProductModel newProduct, String newTag) {
+    currentProduct.value = newProduct;
+    currentHeroTag.value = newTag;
+
+    _initProductData(newProduct);
+
+    // Cuộn lên đầu trang một cách mượt mà
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 
@@ -38,7 +75,7 @@ class ProductDetailController extends BaseController {
   void selectSize(String size) => selectedSize.value = size;
 
   void increaseQuantity() {
-    if (quantity.value < product.stock) {
+    if (quantity.value < currentProduct.value.stock) {
       quantity.value++;
     } else {
       Get.snackbar('Thông báo', 'Số lượng vượt quá hàng trong kho!');
@@ -52,6 +89,8 @@ class ProductDetailController extends BaseController {
   }
 
   Future<void> addToCart() async {
+    final product = currentProduct.value; // Lấy dữ liệu hiện tại
+
     if (product.colors.isNotEmpty && selectedColor.value.isEmpty) {
       Get.snackbar('Chú ý', 'Vui lòng chọn màu sắc!');
       return;
@@ -70,9 +109,7 @@ class ProductDetailController extends BaseController {
       image: product.images.isNotEmpty ? product.images.first : '',
       price: product.price,
       quantity: quantity.value,
-      selectedColor: selectedColor.value.isNotEmpty
-          ? selectedColor.value
-          : null,
+      selectedColor: selectedColor.value.isNotEmpty ? selectedColor.value : null,
       selectedSize: selectedSize.value.isNotEmpty ? selectedSize.value : null,
     );
 
@@ -89,5 +126,11 @@ class ProductDetailController extends BaseController {
     } else {
       Get.snackbar('Lỗi', 'Không thể thêm vào giỏ hàng. Vui lòng thử lại!');
     }
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose(); // Nhớ dispose để giải phóng bộ nhớ
+    super.onClose();
   }
 }
