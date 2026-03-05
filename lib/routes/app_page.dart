@@ -7,6 +7,7 @@ import 'package:ecomerce/modules/app/auth/views/forgot_password_view.dart';
 import 'package:ecomerce/modules/app/auth/views/login_view.dart';
 import 'package:ecomerce/modules/app/auth/views/signup_view.dart';
 import 'package:ecomerce/modules/app/cart/bindings/cart_binding.dart';
+import 'package:ecomerce/modules/app/cart/bindings/checkout_binding.dart';
 import 'package:ecomerce/modules/app/cart/views/cart_view.dart';
 import 'package:ecomerce/modules/app/cart/views/checkout_view.dart';
 import 'package:ecomerce/modules/app/dashboard/bindings/dashboard_binding.dart';
@@ -103,7 +104,7 @@ class AppPage {
     GetPage(
       name: AppRouter.checkout,
       page: () => const CheckoutView(),
-      binding: CartBinding(),
+      binding: CheckoutBinding(),
     ),
     GetPage(
       name: AppRouter.notification,

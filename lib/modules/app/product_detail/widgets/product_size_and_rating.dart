@@ -9,10 +9,16 @@ class ProductSizeAndRating extends StatelessWidget {
   final List<String> sizes;
   final double rating;
 
+  // THÊM 2 BIẾN NÀY ĐỂ NHẬN STATE VÀ SỰ KIỆN TỪ CONTROLLER
+  final String selectedSize;
+  final ValueChanged<String> onSizeSelected;
+
   const ProductSizeAndRating({
     super.key,
     required this.sizes,
     required this.rating,
+    required this.selectedSize,
+    required this.onSizeSelected,
   });
 
   @override
@@ -22,13 +28,13 @@ class ProductSizeAndRating extends StatelessWidget {
       children: [
         Expanded(
           child: Wrap(
-            spacing: 4.0,
-            runSpacing: 4.0,
+            spacing: 8.0, // Tăng khoảng cách ra một chút cho dễ bấm
+            runSpacing: 8.0,
             children: sizes.map((size) => CategoryItem(
               title: size,
               textStyle: AppStyle.smallContentBold,
-              isSelected: false, 
-              onTap: () {},
+              isSelected: size == selectedSize, // So sánh để đổi màu cam nếu được chọn
+              onTap: () => onSizeSelected(size), // Truyền tên size ra ngoài khi bấm
             )).toList(),
           ),
         ),
@@ -40,7 +46,7 @@ class ProductSizeAndRating extends StatelessWidget {
 
   Widget _buildRatingBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
       decoration: BoxDecoration(
         border: Border.all(color: AppColor.k949494, width: 0.5),
         borderRadius: BorderRadius.circular(33.0),
@@ -48,7 +54,7 @@ class ProductSizeAndRating extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(AppAsset.star01),
+          SvgPicture.asset(AppAsset.star01, width: 16),
           const SizedBox(width: 4.0),
           Text(rating.toString(), style: AppStyle.smallContentBold),
         ],

@@ -14,17 +14,38 @@ class $AssetsIconsGen {
   const $AssetsIconsGen();
 
   final SvgGenImage apple = const SvgGenImage('assets/icons/apple.svg');
+  final AssetGenImage applePay = const AssetGenImage(
+    'assets/icons/apple_pay.png',
+  );
   final SvgGenImage arrowNarrowLeft = const SvgGenImage(
     'assets/icons/arrow_narrow_left.svg',
   );
   final SvgGenImage arrowRight = const SvgGenImage(
     'assets/icons/arrow_right.svg',
   );
+  final SvgGenImage bell03 = const SvgGenImage('assets/icons/bell_03.svg');
+  final SvgGenImage bell03Active = const SvgGenImage(
+    'assets/icons/bell_03_active.svg',
+  );
   final SvgGenImage camera = const SvgGenImage('assets/icons/camera.svg');
+  final AssetGenImage cashOnDelivery = const AssetGenImage(
+    'assets/icons/cash_on_delivery.png',
+  );
+  final SvgGenImage chevronLeft = const SvgGenImage(
+    'assets/icons/chevron_left.svg',
+  );
   final SvgGenImage facebook = const SvgGenImage('assets/icons/facebook.svg');
   final SvgGenImage google = const SvgGenImage('assets/icons/google.svg');
+  final SvgGenImage home05 = const SvgGenImage('assets/icons/home_05.svg');
+  final SvgGenImage home05Active = const SvgGenImage(
+    'assets/icons/home_05_active.svg',
+  );
   final SvgGenImage lock03 = const SvgGenImage('assets/icons/lock_03.svg');
   final SvgGenImage mail01 = const SvgGenImage('assets/icons/mail_01.svg');
+  final AssetGenImage masterCard = const AssetGenImage(
+    'assets/icons/master_card.png',
+  );
+  final AssetGenImage paypal = const AssetGenImage('assets/icons/paypal.png');
   final SvgGenImage plus = const SvgGenImage('assets/icons/plus.svg');
   final SvgGenImage searchRefraction = const SvgGenImage(
     'assets/icons/search_refraction.svg',
@@ -32,8 +53,38 @@ class $AssetsIconsGen {
   final SvgGenImage shoppingCar02 = const SvgGenImage(
     'assets/icons/shopping_car_02.svg',
   );
+  final SvgGenImage shoppingCart01 = const SvgGenImage(
+    'assets/icons/shopping_cart_01.svg',
+  );
+  final SvgGenImage shoppingCart01Active = const SvgGenImage(
+    'assets/icons/shopping_cart_01_active.svg',
+  );
+  final AssetGenImage specialDiscountPng = const AssetGenImage(
+    'assets/icons/special_discount.png',
+  );
+  final SvgGenImage specialDiscountSvg = const SvgGenImage(
+    'assets/icons/special_discount.svg',
+  );
   final SvgGenImage splashIcon = const SvgGenImage(
     'assets/icons/splash_icon.svg',
+  );
+  final SvgGenImage star01 = const SvgGenImage('assets/icons/star_01.svg');
+  final AssetGenImage updatePng = const AssetGenImage(
+    'assets/icons/update.png',
+  );
+  final SvgGenImage updateSvg = const SvgGenImage('assets/icons/update.svg');
+  final SvgGenImage user03 = const SvgGenImage('assets/icons/user_03.svg');
+  final SvgGenImage user03Active = const SvgGenImage(
+    'assets/icons/user_03_active.svg',
+  );
+  final AssetGenImage visaCard = const AssetGenImage(
+    'assets/icons/visa_card.png',
+  );
+  final AssetGenImage yourOrderPng = const AssetGenImage(
+    'assets/icons/your_order.png',
+  );
+  final SvgGenImage yourOrderSvg = const SvgGenImage(
+    'assets/icons/your_order.svg',
   );
 }
 

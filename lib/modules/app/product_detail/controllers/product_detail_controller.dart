@@ -1,7 +1,10 @@
 import 'package:ecomerce/core/base/base_controller.dart';
+import 'package:ecomerce/data/enums/payment_method_type.dart';
 import 'package:ecomerce/data/models/cart_model.dart';
+import 'package:ecomerce/data/models/order_model.dart';
 import 'package:ecomerce/data/models/product_model.dart';
 import 'package:ecomerce/data/services/cart_service.dart';
+import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -126,6 +129,46 @@ class ProductDetailController extends BaseController {
     } else {
       Get.snackbar('Lỗi', 'Không thể thêm vào giỏ hàng. Vui lòng thử lại!');
     }
+  }
+
+  void onTapBuyNow() {
+    final product = currentProduct.value; // Lấy dữ liệu sản phẩm hiện tại cho ngắn gọn
+
+    if (product.colors.isNotEmpty && selectedColor.value.isEmpty) {
+      Get.snackbar('Chú ý', 'Vui lòng chọn màu sắc!');
+      return;
+    }
+    if (product.sizes.isNotEmpty && selectedSize.value.isEmpty) {
+      Get.snackbar('Chú ý', 'Vui lòng chọn kích thước!');
+      return;
+    }
+
+    // 2. TẠO ITEM ĐẦY ĐỦ THÔNG TIN
+    final buyNowItem = CartItemModel(
+      id: '',
+      productId: product.id,
+      name: product.name,
+      image: product.images.isNotEmpty ? product.images.first : '',
+      price: product.price,
+      quantity: quantity.value,
+      selectedColor: selectedColor.value.isNotEmpty ? selectedColor.value : null,
+      selectedSize: selectedSize.value.isNotEmpty ? selectedSize.value : null,
+      isSelected: true,
+    );
+
+    // 3. TẠO ORDER
+    OrderModel newOrder = OrderModel(
+      id: '',
+      userId: 'user_123', // TODO: Tương lai lấy từ AuthController (User đang đăng nhập)
+      customerName: 'Sooti', // TODO: Tương lai lấy từ AuthController
+      items: [buyNowItem],
+      totalAmount: product.price * quantity.value,
+      shippingAddress: '',
+      paymentMethod: PaymentMethodType.cod.code,
+      createdAt: DateTime.now(),
+    );
+
+    Get.toNamed(AppRouter.checkout, arguments: newOrder);
   }
 
   @override

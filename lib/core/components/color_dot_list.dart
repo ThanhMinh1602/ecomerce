@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import '../../../../../core/constants/app_color.dart';
 
 class ColorDotList extends StatelessWidget {
   final List<String> colors;
   final double size;
   final double spacing;
-  final int limit;
+
+  final String? selectedColor;
+  final ValueChanged<String> onColorSelected;
 
   const ColorDotList({
     super.key,
     required this.colors,
     this.size = 18.0,
-    this.spacing = 6.0,
-    this.limit = 4,
+    this.spacing = 4.0,
+    this.selectedColor,
+    required this.onColorSelected,
   });
 
   @override
@@ -21,7 +25,7 @@ class ColorDotList extends StatelessWidget {
     return Wrap(
       spacing: spacing,
       runSpacing: 4.0,
-      children: colors.take(limit).map((colorHex) {
+      children: colors.map((colorHex) {
         return _buildColorItem(colorHex);
       }).toList(),
     );
@@ -35,21 +39,33 @@ class ColorDotList extends StatelessWidget {
       color = Colors.grey;
     }
 
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
+    bool isSelected = colorHex == selectedColor;
 
-        border: Border.all(color: Colors.black.withOpacity(0.1), width: 0.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
+    return GestureDetector(
+      onTap: () => onColorSelected(colorHex),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: isSelected
+              ? Border.all(color: AppColor.orange500, width: 1.5)
+              : null,
+        ),
+        child: Center(
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.black.withOpacity(0.1),
+                width: 0.5,
+              ),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

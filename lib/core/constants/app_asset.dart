@@ -31,6 +31,15 @@ class AppAsset {
   static const update = 'assets/icons/update.png';
   static const specialDiscount = 'assets/icons/special_discount.png';
 
+  //payment
+
+  static const visaCard = 'assets/icons/visa_card.png';
+  static const paypal = 'assets/icons/paypal.png';
+  static const masterCard = 'assets/icons/master_card.png';
+  static const applePay = 'assets/icons/apple_pay.png';
+  static const cashOnDelivery = 'assets/icons/cash_on_delivery.png';
+
+
   //images
   static const onboarding1 = 'assets/images/onboarding_1.png';
   static const onboarding2 = 'assets/images/onboarding_2.png';

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/constants/app_style.dart';
 
 class PaymentMethodItemWidget extends StatelessWidget {
   final bool isSelected;
   final String title;
-  final Widget trailing; // Truyền icon Visa/MasterCard hoặc ApplePay vào đây
+  final List<String> icons; // Truyền icon Visa/MasterCard hoặc ApplePay vào đây
   final VoidCallback onTap;
 
   const PaymentMethodItemWidget({
     super.key,
     required this.isSelected,
     required this.title,
-    required this.trailing,
+    required this.icons,
     required this.onTap,
   });
 
@@ -55,21 +56,19 @@ class PaymentMethodItemWidget extends StatelessWidget {
                   : null,
             ),
             const SizedBox(width: 12.0),
-
-            // Tên phương thức
             Expanded(
               child: Text(
                 title,
                 style: AppStyle.smallContentBold.copyWith(
-                  // Đổi màu text thành xanh nếu đang chọn (hoặc giữ đen tuỳ ý)
                   color: isSelected ? activeGreen : AppColor.black500,
                   fontSize: 14.0,
                 ),
               ),
             ),
-
-            // Các Logo đi kèm
-            trailing,
+            ...icons.map((e)=>Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Image.asset(e, width: 32.0),
+            ))
           ],
         ),
       ),
