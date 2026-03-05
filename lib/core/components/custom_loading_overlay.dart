@@ -18,7 +18,6 @@ class CustomLoadingOverlay extends StatelessWidget {
     return Stack(
       children: [
         child,
-
         Obx(() {
           if (isLoading.value) {
             return Positioned.fill(

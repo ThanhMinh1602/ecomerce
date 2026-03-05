@@ -17,7 +17,6 @@ class NavigationBarWidget extends GetView<DashboardController> {
       
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(99),
-
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(99),

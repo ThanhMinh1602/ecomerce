@@ -1,12 +1,14 @@
 import 'package:ecomerce/core/components/button/custom_menu_button.dart';
 import 'package:flutter/material.dart';
 
-class NotificationMenuButton extends StatelessWidget {
+
+
+class ProfileMenuItem extends StatelessWidget {
   final String iconPath;
   final String title;
   final VoidCallback onTap;
 
-  const NotificationMenuButton({
+  const ProfileMenuItem({
     super.key,
     required this.iconPath,
     required this.title,
@@ -15,16 +17,12 @@ class NotificationMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return CustomMenuButton(
       iconPath: iconPath,
       title: title,
       onTap: onTap,
-
-      iconSize: 39.0,
-      fontSize: 18.0,
-      verticalPadding: 8.0,
-      borderRadius: 16.0,
-      borderOpacity: 1.0,
+      
     );
   }
 }

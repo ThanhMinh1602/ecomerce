@@ -8,6 +8,7 @@ import 'package:ecomerce/modules/app/auth/views/login_view.dart';
 import 'package:ecomerce/modules/app/auth/views/signup_view.dart';
 import 'package:ecomerce/modules/app/cart/bindings/cart_binding.dart';
 import 'package:ecomerce/modules/app/cart/views/cart_view.dart';
+import 'package:ecomerce/modules/app/cart/views/checkout_view.dart';
 import 'package:ecomerce/modules/app/dashboard/bindings/dashboard_binding.dart';
 import 'package:ecomerce/modules/app/dashboard/views/dashboard_view.dart';
 import 'package:ecomerce/modules/app/home/views/home_view.dart';
@@ -97,6 +98,11 @@ class AppPage {
     GetPage(
       name: AppRouter.cart,
       page: () => const CartView(),
+      binding: CartBinding(),
+    ),
+    GetPage(
+      name: AppRouter.checkout,
+      page: () => const CheckoutView(),
       binding: CartBinding(),
     ),
     GetPage(

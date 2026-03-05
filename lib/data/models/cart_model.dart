@@ -1,5 +1,5 @@
 class CartItemModel {
-  String id; 
+  String id;
   String productId;
   String name;
   String image;
@@ -7,6 +7,9 @@ class CartItemModel {
   int quantity;
   String? selectedColor;
   String? selectedSize;
+
+  // Thêm biến này để quản lý trạng thái UI (Check/Uncheck)
+  bool isSelected;
 
   CartItemModel({
     required this.id,
@@ -17,6 +20,7 @@ class CartItemModel {
     this.quantity = 1,
     this.selectedColor,
     this.selectedSize,
+    this.isSelected = false, // Mặc định là chưa chọn
   });
 
   factory CartItemModel.fromJson(Map<String, dynamic> json, String docId) {
@@ -29,6 +33,7 @@ class CartItemModel {
       quantity: json['quantity'] ?? 1,
       selectedColor: json['selectedColor'],
       selectedSize: json['selectedSize'],
+      // Không cần parse isSelected từ JSON
     );
   }
 
@@ -42,6 +47,7 @@ class CartItemModel {
       'selectedColor': selectedColor,
       'selectedSize': selectedSize,
       'addedAt': DateTime.now(),
+      // Không đẩy isSelected lên Firebase
     };
   }
 }
