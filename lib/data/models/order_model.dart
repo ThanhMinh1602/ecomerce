@@ -9,10 +9,15 @@ class OrderModel {
   String customerName;
   List<CartItemModel> items;
   double totalAmount;
+  double shippingFee; // Thêm phí ship
+  double discountAmount; // Thêm giảm giá
   String shippingAddress;
   PaymentMethodType paymentMethod;
   OrderStatus status;
   DateTime createdAt;
+
+  String? paymentId;
+  String? payerEmail;
 
   OrderModel({
     required this.id,
@@ -20,10 +25,14 @@ class OrderModel {
     required this.customerName,
     required this.items,
     required this.totalAmount,
+    this.shippingFee = 0.0,
+    this.discountAmount = 0.0,
     required this.shippingAddress,
     required this.paymentMethod,
-    this.status = OrderStatus.pending, // Dùng enum thay vì 'Pending'
+    this.status = OrderStatus.pending,
     required this.createdAt,
+    this.paymentId,
+    this.payerEmail,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json, String docId) {
@@ -35,13 +44,14 @@ class OrderModel {
           ?.map((item) => CartItemModel.fromJson(item as Map<String, dynamic>, item['id'] ?? ''))
           .toList() ?? [],
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+      shippingFee: (json['shippingFee'] ?? 0).toDouble(),
+      discountAmount: (json['discountAmount'] ?? 0).toDouble(),
       shippingAddress: json['shippingAddress'] ?? '',
-
-      // Chuyển từ JSON String sang Enum bằng hàm fromString
       paymentMethod: PaymentMethodType.fromString(json['paymentMethod'] ?? ''),
       status: OrderStatus.fromString(json['status'] ?? ''),
-
       createdAt: (json['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      paymentId: json['paymentId'],
+      payerEmail: json['payerEmail'],
     );
   }
 
@@ -51,13 +61,14 @@ class OrderModel {
       'customerName': customerName,
       'items': items.map((item) => item.toJson()).toList(),
       'totalAmount': totalAmount,
+      'shippingFee': shippingFee,
+      'discountAmount': discountAmount,
       'shippingAddress': shippingAddress,
-
-      // Chuyển từ Enum sang String (code) để lưu vào Firestore
       'paymentMethod': paymentMethod.code,
       'status': status.code,
-
       'createdAt': createdAt,
+      'paymentId': paymentId,
+      'payerEmail': payerEmail,
     };
   }
 }

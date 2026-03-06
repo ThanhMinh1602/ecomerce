@@ -21,13 +21,15 @@ class CheckoutView extends GetView<CheckoutController> {
       appBar: const SmallAppBar(title: 'Payment'),
 
       bottomNavigationBar: Obx(() {
-        final user = controller.user.value;
-        final hasAddress = user != null && user.addresses.isNotEmpty;
+        final userValue = controller.user.value;
+        final hasAddress = userValue != null && userValue.addresses.isNotEmpty;
+
         return TransactionSummaryWidget(
           totalPrice: controller.order.totalAmount,
           shippingFee: controller.shippingFee.value,
           discount: controller.discountAmount.value,
-          onPressed: hasAddress ? () {} : null,
+          // KẾT NỐI HÀM PLACE ORDER TẠI ĐÂY
+          onPressed: hasAddress ? controller.placeOrder : null,
         );
       }),
 

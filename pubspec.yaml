@@ -51,6 +51,8 @@ dependencies:
   carousel_slider: ^5.1.2
   geolocator: ^14.0.2
   geocoding: ^4.0.0
+  flutter_stripe: ^12.3.0
+  flutter_paypal_payment: ^1.0.8
 
 dev_dependencies:
   flutter_test:
