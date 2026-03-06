@@ -15,6 +15,8 @@ class AppAsset {
   static const chevronLeft = 'assets/icons/chevron_left.svg';
   static const shoppingCar02 = 'assets/icons/shopping_car_02.svg';
   static const star01 = 'assets/icons/star_01.svg';
+  static const   riMapPin2Fill = 'assets/icons/ri_map_pin_2_fill.svg';
+
 
   //navbar
   static const bell03 = 'assets/icons/bell_03.svg';

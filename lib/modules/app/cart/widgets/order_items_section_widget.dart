@@ -1,3 +1,4 @@
+import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:ecomerce/core/extension/double_extension.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_color.dart';
@@ -40,8 +41,8 @@ class OrderItemsSectionWidget extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
-          child: Image.network(
-            item.image,
+          child: CldImageWidget(
+           publicId:  item.image,
             width: 64,
             height: 64,
             fit: BoxFit.cover,

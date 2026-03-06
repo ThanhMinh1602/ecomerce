@@ -8,12 +8,15 @@ class TransactionSummaryWidget extends StatelessWidget {
   final double totalPrice;
   final double shippingFee;
   final double discount;
+  final void Function()? onPressed;
+
 
   const TransactionSummaryWidget({
     super.key,
     required this.totalPrice,
     required this.shippingFee,
     required this.discount,
+     this.onPressed,
   });
 
   double get finalTotal => (totalPrice + shippingFee) - discount;
@@ -69,7 +72,7 @@ class TransactionSummaryWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20.0),
-          CustomButton(btnText: 'Buy', onPressed: () {}),
+          CustomButton(btnText: 'Buy', onPressed:onPressed),
         ],
       ),
     );

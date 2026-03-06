@@ -4,7 +4,7 @@ import 'package:ecomerce/core/utils/validator_util.dart';
 import 'package:ecomerce/modules/app/auth/controllers/signup_controller.dart';
 import 'package:ecomerce/modules/app/auth/widgets/animated_auth_header.dart';
 import 'package:ecomerce/modules/app/auth/widgets/auth_layout_wrapper.dart';
-import 'package:ecomerce/modules/app/auth/widgets/input_field.dart';
+import 'package:ecomerce/core/components/text_field/input_field.dart';
 import 'package:ecomerce/modules/app/auth/widgets/submit_signup_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

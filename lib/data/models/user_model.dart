@@ -1,11 +1,16 @@
 import 'package:ecomerce/data/enums/user_role.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; 
 
 class UserModel {
   String id;
   String name;
   String email;
-  UserRole role; // Đổi sang kiểu Enum
+  UserRole role;
   String? phone;
+  String? avatar; 
+  List<String> addresses;
+  
+
   DateTime createdAt;
 
   UserModel({
@@ -14,6 +19,8 @@ class UserModel {
     required this.email,
     this.role = UserRole.customer,
     this.phone,
+    this.avatar,
+    this.addresses = const [], 
     required this.createdAt,
   });
 
@@ -22,11 +29,17 @@ class UserModel {
       id: documentId,
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      // Dùng hàm fromString để parse dữ liệu từ Firebase về Enum
       role: UserRole.fromString(json['role'] ?? ''),
       phone: json['phone'],
+      avatar: json['avatar'],
+
+      
+      addresses: json['addresses'] != null
+          ? List<String>.from(json['addresses'])
+          : [],
+
       createdAt: json['createdAt'] != null
-          ? json['createdAt'].toDate()
+          ? (json['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }
@@ -37,6 +50,11 @@ class UserModel {
       'email': email,
       'role': role.value,
       'phone': phone,
+
+      
+      'avatar': avatar,
+      'addresses': addresses,
+
       'createdAt': createdAt,
     };
   }

@@ -1,13 +1,15 @@
+import 'package:ecomerce/core/components/button/custom_button.dart';
 import 'package:ecomerce/core/components/custom_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthLayoutWrapper extends StatelessWidget {
-  final RxBool isLoading; // Nhận RxBool từ GetX Controller
+  final RxBool isLoading;
   final GlobalKey<FormState> formKey;
   final PreferredSizeWidget? appBar;
-  final double crowdedThreshold; // Ngưỡng chiều cao để ẩn title/logo
+  final double crowdedThreshold;
   final Widget Function(BuildContext context, bool isCrowded) builder;
+  final Widget? bottomNavigationBar;
 
   const AuthLayoutWrapper({
     super.key,
@@ -15,7 +17,8 @@ class AuthLayoutWrapper extends StatelessWidget {
     required this.formKey,
     required this.builder,
     this.appBar,
-    this.crowdedThreshold = 500.0, // Mặc định là 500
+    this.crowdedThreshold = 500.0,
+    this.bottomNavigationBar,
   });
 
   @override
@@ -26,24 +29,25 @@ class AuthLayoutWrapper extends StatelessWidget {
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
         appBar: appBar,
+        bottomNavigationBar: bottomNavigationBar,
         body: SafeArea(
           child: CustomLoadingOverlay(
             isLoading: isLoading,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 bool isCrowded = constraints.maxHeight < crowdedThreshold;
-
                 return SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Form(
                         key: formKey,
                         autovalidateMode: AutovalidateMode.onUnfocus,
                         child: IntrinsicHeight(
-                          // Render nội dung bên trong Form
                           child: builder(context, isCrowded),
                         ),
                       ),

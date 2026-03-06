@@ -10,7 +10,13 @@ class AppRouter {
   static const String notification = '/notification';
   static const String notificationMenuDetail = '/notification-menu-detail';
   static const String cart = '/cart';
+  //profile
   static const String profile = '/profile';
+  static const String myDetails = '/my-details';
+  static const String myOrders = '/my-orders';
+  static const String vouchersOffers = '/vouchers-offers';
+  static const String privacySettings = '/privacy-settings';
+  //checkout
   static const String search = '/search';
   static const String productDetails = '/product-details';
   static const String checkout = '/checkout';

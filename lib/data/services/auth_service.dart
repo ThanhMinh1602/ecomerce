@@ -46,6 +46,23 @@ class AuthService extends GetxService {
     }
   }
 
+  Future<bool> updateUser(UserModel updatedUser) async {
+    try {
+      await _firestore
+          .collection(FirebaseProvider.users)
+          .doc(updatedUser.id)
+          .update(updatedUser.toJson());
+
+      currentUser.value = updatedUser;
+      currentUser.refresh();
+
+      return true;
+    } catch (e) {
+      print("Lỗi cập nhật thông tin user: $e");
+      return false;
+    }
+  }
+
   Future<bool> loginAdmin(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(

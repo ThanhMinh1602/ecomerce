@@ -21,8 +21,12 @@ import 'package:ecomerce/modules/app/onboarding/bindings/onboarding_binding.dart
 import 'package:ecomerce/modules/app/onboarding/views/onboarding_view.dart';
 import 'package:ecomerce/modules/app/product_detail/bindings/product_detail_binding.dart';
 import 'package:ecomerce/modules/app/product_detail/views/product_detail_view.dart';
+import 'package:ecomerce/modules/app/profile/bindings/my_detail_binding.dart';
 import 'package:ecomerce/modules/app/profile/bindings/profile_binding.dart';
+import 'package:ecomerce/modules/app/profile/views/my_details_view.dart';
+import 'package:ecomerce/modules/app/profile/views/my_orders_view.dart';
 import 'package:ecomerce/modules/app/profile/views/profile_view.dart';
+import 'package:ecomerce/modules/app/profile/views/vouchers_offers_view.dart';
 import 'package:ecomerce/modules/app/search/bindings/search_binding.dart';
 import 'package:ecomerce/modules/app/search/views/search_view.dart';
 import 'package:ecomerce/modules/app/splash/bindings/splash_binding.dart';
@@ -75,7 +79,7 @@ class AppPage {
     GetPage(
       name: AppRouter.dashboard,
       page: () => const DashboardView(),
-      bindings:[ DashboardBinding(),CartBinding()],
+      bindings:[ DashboardBinding(),CartBinding(), ProfileBinding()],
     ),
     GetPage(
       name: AppRouter.home,
@@ -119,6 +123,21 @@ class AppPage {
     GetPage(
       name: AppRouter.profile,
       page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRouter.myDetails,
+      page: () => const MyDetailsView(),
+      binding: MyDetailBinding(),
+    ),
+    GetPage(
+      name: AppRouter.myOrders,
+      page: () => const MyOrdersView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRouter.vouchersOffers,
+      page: () => const VouchersOffersView(),
       binding: ProfileBinding(),
     ),
     GetPage(

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       initialBinding: InitialBinding(),
       getPages: AppPage.page,
       defaultTransition: appTransition,
-      transitionDuration: Duration(milliseconds: 300),
+      transitionDuration: Duration(milliseconds: 200),
     );
   }
 }

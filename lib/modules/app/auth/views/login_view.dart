@@ -4,7 +4,7 @@ import 'package:ecomerce/modules/app/auth/controllers/login_controller.dart';
 import 'package:ecomerce/modules/app/auth/widgets/animated_auth_logo.dart';
 import 'package:ecomerce/modules/app/auth/widgets/auth_layout_wrapper.dart';
 import 'package:ecomerce/modules/app/auth/widgets/forgot_password_button.dart';
-import 'package:ecomerce/modules/app/auth/widgets/input_field.dart';
+import 'package:ecomerce/core/components/text_field/input_field.dart';
 import 'package:ecomerce/modules/app/auth/widgets/sign_up_row.dart';
 import 'package:ecomerce/modules/app/auth/widgets/social_login_section.dart';
 import 'package:ecomerce/modules/app/auth/widgets/submit_login_button.dart';
