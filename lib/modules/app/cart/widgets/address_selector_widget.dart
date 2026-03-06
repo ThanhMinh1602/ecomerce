@@ -1,7 +1,6 @@
 import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/constants/app_style.dart';
 
@@ -56,6 +55,8 @@ class AddressSelectorWidget extends StatelessWidget {
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          clipBehavior: Clip.hardEdge,
           child: Container(
             decoration: BoxDecoration(
               color: AppColor.white,

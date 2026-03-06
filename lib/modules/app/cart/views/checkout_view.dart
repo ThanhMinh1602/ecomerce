@@ -62,8 +62,6 @@ class CheckoutView extends GetView<CheckoutController> {
             OrderItemsSectionWidget(items: controller.order.items),
             const SizedBox(height: 16),
 
-            Text('Payment Method', style: AppStyle.smallContentBold),
-            const SizedBox(height: 12),
             Obx(
               () => PaymentMethodSectionWidget(
                 selectedMethod: controller.selectedPaymentMethod.value,
