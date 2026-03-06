@@ -41,7 +41,6 @@ class CartService extends GetxService {
         .toList());
   }
 
-  // TRẢ VÊ TRUE / FALSE THAY VÌ SNACKBAR
   Future<bool> addToCart(CartItemModel item) async {
     final user = _authService.currentUser.value;
     if (user == null) return false;

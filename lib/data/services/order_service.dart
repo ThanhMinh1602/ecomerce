@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecomerce/core/providers/firebase_provider.dart';
 import 'package:ecomerce/core/utils/app_utils.dart';
+import 'package:ecomerce/data/enums/order_status.dart';
+import 'package:ecomerce/data/enums/payment_method_type.dart';
 import 'package:ecomerce/data/models/order_model.dart';
 import 'package:ecomerce/data/services/auth_service.dart';
 import 'package:ecomerce/data/services/cart_service.dart';
@@ -11,10 +13,10 @@ class OrderService extends GetxService {
   final AuthService _authService = Get.find<AuthService>();
   final CartService _cartService = Get.find<CartService>();
 
-  // TRẢ VÊ TRUE / FALSE THAY VÌ SNACKBAR
+  
   Future<bool> placeOrder({
     required String shippingAddress,
-    required String paymentMethod,
+    required PaymentMethodType paymentMethod,
   }) async {
     final user = _authService.currentUser.value;
     final cartItems = _cartService.cartItems;
@@ -32,19 +34,19 @@ class OrderService extends GetxService {
         totalAmount: _cartService.totalPrice,
         shippingAddress: shippingAddress,
         paymentMethod: paymentMethod,
-        status: 'Pending',
+        status: OrderStatus.pending,
         createdAt: DateTime.now(),
       );
 
       await _db.collection('orders').doc(orderId).set(newOrder.toJson());
 
-      // Xóa giỏ hàng nếu đặt đơn thành công
+      
       await _cartService.clearCart();
 
-      return true; // Thành công
+      return true; 
     } catch (e) {
       print("Lỗi khi đặt hàng: $e");
-      return false; // Thất bại
+      return false; 
     }
   }
 
@@ -72,7 +74,7 @@ class OrderService extends GetxService {
         .toList());
   }
 
-  // TRẢ VÊ TRUE / FALSE
+  
   Future<bool> updateOrderStatus(String orderId, String newStatus) async {
     try {
       await _db.collection('orders').doc(orderId).update({'status': newStatus});

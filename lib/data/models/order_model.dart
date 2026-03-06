@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecomerce/data/enums/order_status.dart';
+import 'package:ecomerce/data/enums/payment_method_type.dart';
 import 'package:ecomerce/data/models/cart_model.dart';
 
 class OrderModel {
   String id;
   String userId;
   String customerName;
-  List<CartItemModel> items; 
+  List<CartItemModel> items;
   double totalAmount;
   String shippingAddress;
-  String paymentMethod; 
-  String status; 
+  PaymentMethodType paymentMethod;
+  OrderStatus status;
   DateTime createdAt;
 
   OrderModel({
@@ -20,7 +22,7 @@ class OrderModel {
     required this.totalAmount,
     required this.shippingAddress,
     required this.paymentMethod,
-    this.status = 'Pending', 
+    this.status = OrderStatus.pending, // Dùng enum thay vì 'Pending'
     required this.createdAt,
   });
 
@@ -34,9 +36,11 @@ class OrderModel {
           .toList() ?? [],
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
       shippingAddress: json['shippingAddress'] ?? '',
-      paymentMethod: json['paymentMethod'] ?? 'COD',
-      status: json['status'] ?? 'Pending',
-      
+
+      // Chuyển từ JSON String sang Enum bằng hàm fromString
+      paymentMethod: PaymentMethodType.fromString(json['paymentMethod'] ?? ''),
+      status: OrderStatus.fromString(json['status'] ?? ''),
+
       createdAt: (json['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -45,12 +49,14 @@ class OrderModel {
     return {
       'userId': userId,
       'customerName': customerName,
-      
       'items': items.map((item) => item.toJson()).toList(),
       'totalAmount': totalAmount,
       'shippingAddress': shippingAddress,
-      'paymentMethod': paymentMethod,
-      'status': status,
+
+      // Chuyển từ Enum sang String (code) để lưu vào Firestore
+      'paymentMethod': paymentMethod.code,
+      'status': status.code,
+
       'createdAt': createdAt,
     };
   }

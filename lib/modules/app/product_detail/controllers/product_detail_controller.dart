@@ -1,4 +1,5 @@
 import 'package:ecomerce/core/base/base_controller.dart';
+import 'package:ecomerce/core/mixins/cart_mixin.dart';
 import 'package:ecomerce/data/enums/payment_method_type.dart';
 import 'package:ecomerce/data/models/cart_model.dart';
 import 'package:ecomerce/data/models/order_model.dart';
@@ -8,15 +9,12 @@ import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProductDetailController extends BaseController {
+class ProductDetailController extends BaseController with CartMixin {
   // 1. Biến dữ liệu thành Rx để UI tự động render lại khi có sản phẩm mới
   late Rx<ProductModel> currentProduct;
   late RxString currentHeroTag;
 
-  // 2. Thêm ScrollController để điều khiển cuộn lên đầu trang
   final ScrollController scrollController = ScrollController();
-
-  final CartService _cartService = Get.find<CartService>();
 
   RxString selectedColor = ''.obs;
   RxString selectedSize = ''.obs;
@@ -114,21 +112,12 @@ class ProductDetailController extends BaseController {
       quantity: quantity.value,
       selectedColor: selectedColor.value.isNotEmpty ? selectedColor.value : null,
       selectedSize: selectedSize.value.isNotEmpty ? selectedSize.value : null,
+      availableColors: product.colors,
+      availableSizes: product.sizes
     );
 
-    bool isSuccess = await _cartService.addToCart(cartItem);
-
+     await handleAddToCart(cartItem);
     isAddingToCart.value = false;
-
-    if (isSuccess) {
-      Get.snackbar(
-        'Thành công',
-        'Đã thêm ${product.name} vào giỏ hàng!',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } else {
-      Get.snackbar('Lỗi', 'Không thể thêm vào giỏ hàng. Vui lòng thử lại!');
-    }
   }
 
   void onTapBuyNow() {
@@ -164,7 +153,7 @@ class ProductDetailController extends BaseController {
       items: [buyNowItem],
       totalAmount: product.price * quantity.value,
       shippingAddress: '',
-      paymentMethod: PaymentMethodType.cod.code,
+      paymentMethod: PaymentMethodType.cod,
       createdAt: DateTime.now(),
     );
 

@@ -9,7 +9,7 @@ class CustomAnimatedVisibility extends StatelessWidget {
     super.key,
     required this.visible,
     required this.child,
-    this.duration = const Duration(milliseconds: 300), // Mặc định 300ms
+    this.duration = const Duration(milliseconds: 300),
   });
 
   @override
@@ -21,12 +21,12 @@ class CustomAnimatedVisibility extends StatelessWidget {
           opacity: animation,
           child: SizeTransition(
             sizeFactor: animation,
-            axisAlignment: -1.0, // Thu nhỏ về phía trên để không bị giật layout
+            axisAlignment: -1.0,
             child: child,
           ),
         );
       },
-      // Thêm key để AnimatedSwitcher nhận diện được khi nào rỗng
+
       child: visible
           ? child
           : const SizedBox.shrink(key: ValueKey('none_animated_box')),

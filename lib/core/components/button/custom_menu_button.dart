@@ -8,7 +8,7 @@ class CustomMenuButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  // Thêm các tham số tùy chọn (có giá trị mặc định) để linh hoạt tinh chỉnh
+  
   final double iconSize;
   final double fontSize;
   final double verticalPadding;
@@ -20,18 +20,18 @@ class CustomMenuButton extends StatelessWidget {
     required this.iconPath,
     required this.title,
     required this.onTap,
-    this.iconSize = 28.0, // Mặc định theo Profile
-    this.fontSize = 16.0, // Mặc định theo Profile
-    this.verticalPadding = 16.0, // Mặc định theo Profile
-    this.borderRadius = 20.0, // Mặc định theo Profile
-    this.borderOpacity = 0.8, // Mặc định theo Profile
+    this.iconSize = 28.0, 
+    this.fontSize = 16.0, 
+    this.verticalPadding = 16.0, 
+    this.borderRadius = 20.0, 
+    this.borderOpacity = 0.8, 
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20.0), // Bo góc cho hiệu ứng nhấn (splash)
+      borderRadius: BorderRadius.circular(20.0), 
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: verticalPadding),
         decoration: BoxDecoration(
@@ -44,7 +44,7 @@ class CustomMenuButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Tự động nhận diện SVG hay PNG
+            
             _buildIcon(),
 
             const SizedBox(width: 16.0),
@@ -70,7 +70,7 @@ class CustomMenuButton extends StatelessWidget {
     );
   }
 
-  // Hàm helper tự động kiểm tra đuôi file
+  
   Widget _buildIcon() {
     if (iconPath.toLowerCase().endsWith('.svg')) {
       return SvgPicture.asset(iconPath, width: iconSize, height: iconSize);

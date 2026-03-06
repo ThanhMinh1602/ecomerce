@@ -2,7 +2,7 @@ import 'package:ecomerce/core/constants/app_asset.dart';
 
 enum PaymentMethodType {
   
-  creditCard('credit_card', 'Creditcard', [AppAsset.masterCard, AppAsset.visaCard]),
+  creditCard('credit_card', 'Credit Card', [AppAsset.masterCard, AppAsset.visaCard]),
   applePay('apple_pay', 'Apple Pay', [AppAsset.applePay]),
   paypal('paypal', 'PayPal', [AppAsset.paypal]),
   cod('cod', 'Payment upon delivery',[ AppAsset.cashOnDelivery]);

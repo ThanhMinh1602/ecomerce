@@ -75,7 +75,7 @@ class AppPage {
     GetPage(
       name: AppRouter.dashboard,
       page: () => const DashboardView(),
-      binding: DashboardBinding(),
+      bindings:[ DashboardBinding(),CartBinding()],
     ),
     GetPage(
       name: AppRouter.home,
