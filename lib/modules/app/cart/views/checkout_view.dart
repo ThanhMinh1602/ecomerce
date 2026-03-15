@@ -38,7 +38,6 @@ class CheckoutView extends GetView<CheckoutController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Obx(() {
               final user = controller.user.value;
               final hasAddress = user != null && user.addresses.isNotEmpty;

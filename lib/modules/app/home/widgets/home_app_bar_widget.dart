@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  
   HomeAppBar({super.key});
 
-  
   final AuthService _authService = Get.find<AuthService>();
 
   String _getGreeting() {
@@ -35,10 +33,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             const CircleAvatar(
               backgroundColor: Colors.white,
               radius: 28,
-              
+
               backgroundImage: NetworkImage(
                 'https://blog.vn.revu.net/wp-content/uploads/2025/09/anh-son-tung-mtp-thumb.jpg',
-
               ),
             ),
             const SizedBox(width: 12.0),
@@ -47,14 +44,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
-                  final fullName = _authService.currentUser.value?.name.trim() ?? 'Sooti';
+                  final fullName =
+                      _authService.currentUser.value?.name.trim() ?? 'Sooti';
                   final lastName = fullName.isNotEmpty
                       ? fullName.split(RegExp(r'\s+')).last
                       : 'Sooti';
 
                   return Text(
-                      '${_getGreeting()}, $lastName!',
-                      style: AppStyle.smallContentBold
+                    '${_getGreeting()}, $lastName!',
+                    style: AppStyle.smallContentBold,
                   );
                 }),
                 Text(

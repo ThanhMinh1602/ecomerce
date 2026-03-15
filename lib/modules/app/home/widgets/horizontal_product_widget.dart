@@ -76,7 +76,12 @@ class HorizontalProductWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   if (product.colors.isNotEmpty)
-                    ColorDotList(colors: product.colors, onColorSelected: (String value) {  },size: 18.0,spacing: 4.0,),
+                    ColorDotList(
+                      colors: product.colors,
+                      onColorSelected: (String value) {},
+                      size: 18.0,
+                      spacing: 4.0,
+                    ),
                 ],
               ),
             ),

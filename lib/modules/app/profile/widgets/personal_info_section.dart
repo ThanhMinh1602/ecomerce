@@ -42,7 +42,8 @@ class PersonalInfoSection extends GetView<MyDetailViewController> {
           hintText: 'Enter your phone number',
           controller: controller.phoneController,
           prefixIcon: AppAsset.chevronLeft,
-          validator: (value) => ValidatorUtil.validateEmpty(value, 'Phone Number'),
+          validator: (value) =>
+              ValidatorUtil.validateEmpty(value, 'Phone Number'),
         ),
       ],
     );

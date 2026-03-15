@@ -124,7 +124,9 @@ class CartView extends GetView<CartController> {
             return Expanded(
               flex: 1,
               child: CustomButton(
-                onPressed: hasSelectedItems ? controller.proceedToCheckout : null,
+                onPressed: hasSelectedItems
+                    ? controller.proceedToCheckout
+                    : null,
                 btnText: 'Checkout',
               ),
             );

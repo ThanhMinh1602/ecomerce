@@ -12,7 +12,10 @@ class MyOrdersCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: AppColor.black100.withOpacity(0.5), width: 1.0),
+        border: Border.all(
+          color: AppColor.black100.withOpacity(0.5),
+          width: 1.0,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),

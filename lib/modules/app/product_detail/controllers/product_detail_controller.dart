@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductDetailController extends BaseController with CartMixin {
-  // 1. Biến dữ liệu thành Rx để UI tự động render lại khi có sản phẩm mới
   late Rx<ProductModel> currentProduct;
   late RxString currentHeroTag;
 
@@ -37,7 +36,6 @@ class ProductDetailController extends BaseController with CartMixin {
     }
   }
 
-  // Tách hàm khởi tạo dữ liệu mặc định (màu, size, số lượng)
   void _initProductData(ProductModel p) {
     if (p.colors.isNotEmpty) {
       selectedColor.value = p.colors.first;
@@ -51,17 +49,15 @@ class ProductDetailController extends BaseController with CartMixin {
       selectedSize.value = '';
     }
 
-    quantity.value = 1; // Reset số lượng về 1
+    quantity.value = 1;
   }
 
-  // 3. HÀM QUAN TRỌNG: Gọi hàm này khi bấm vào sản phẩm đề xuất
   void loadNewProduct(ProductModel newProduct, String newTag) {
     currentProduct.value = newProduct;
     currentHeroTag.value = newTag;
 
     _initProductData(newProduct);
 
-    // Cuộn lên đầu trang một cách mượt mà
     if (scrollController.hasClients) {
       scrollController.animateTo(
         0.0,
@@ -90,7 +86,7 @@ class ProductDetailController extends BaseController with CartMixin {
   }
 
   Future<void> addToCart() async {
-    final product = currentProduct.value; // Lấy dữ liệu hiện tại
+    final product = currentProduct.value;
 
     if (product.colors.isNotEmpty && selectedColor.value.isEmpty) {
       Get.snackbar('Chú ý', 'Vui lòng chọn màu sắc!');
@@ -110,18 +106,20 @@ class ProductDetailController extends BaseController with CartMixin {
       image: product.images.isNotEmpty ? product.images.first : '',
       price: product.price,
       quantity: quantity.value,
-      selectedColor: selectedColor.value.isNotEmpty ? selectedColor.value : null,
+      selectedColor: selectedColor.value.isNotEmpty
+          ? selectedColor.value
+          : null,
       selectedSize: selectedSize.value.isNotEmpty ? selectedSize.value : null,
       availableColors: product.colors,
-      availableSizes: product.sizes
+      availableSizes: product.sizes,
     );
 
-     await handleAddToCart(cartItem);
+    await handleAddToCart(cartItem);
     isAddingToCart.value = false;
   }
 
   void onTapBuyNow() {
-    final product = currentProduct.value; // Lấy dữ liệu sản phẩm hiện tại cho ngắn gọn
+    final product = currentProduct.value;
 
     if (product.colors.isNotEmpty && selectedColor.value.isEmpty) {
       Get.snackbar('Chú ý', 'Vui lòng chọn màu sắc!');
@@ -132,7 +130,6 @@ class ProductDetailController extends BaseController with CartMixin {
       return;
     }
 
-    // 2. TẠO ITEM ĐẦY ĐỦ THÔNG TIN
     final buyNowItem = CartItemModel(
       id: '',
       productId: product.id,
@@ -140,16 +137,17 @@ class ProductDetailController extends BaseController with CartMixin {
       image: product.images.isNotEmpty ? product.images.first : '',
       price: product.price,
       quantity: quantity.value,
-      selectedColor: selectedColor.value.isNotEmpty ? selectedColor.value : null,
+      selectedColor: selectedColor.value.isNotEmpty
+          ? selectedColor.value
+          : null,
       selectedSize: selectedSize.value.isNotEmpty ? selectedSize.value : null,
       isSelected: true,
     );
 
-    // 3. TẠO ORDER
     OrderModel newOrder = OrderModel(
       id: '',
-      userId: 'user_123', // TODO: Tương lai lấy từ AuthController (User đang đăng nhập)
-      customerName: 'Sooti', // TODO: Tương lai lấy từ AuthController
+      userId: 'user_123',
+      customerName: 'Sooti',
       items: [buyNowItem],
       totalAmount: product.price * quantity.value,
       shippingAddress: '',
@@ -162,7 +160,7 @@ class ProductDetailController extends BaseController with CartMixin {
 
   @override
   void onClose() {
-    scrollController.dispose(); // Nhớ dispose để giải phóng bộ nhớ
+    scrollController.dispose();
     super.onClose();
   }
 }

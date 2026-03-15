@@ -18,7 +18,7 @@ class SignupView extends GetView<SignupController> {
       appBar: const SmallAppBar(),
       isLoading: controller.isLoading,
       formKey: controller.signupFormKey,
-      crowdedThreshold: 500, // Ngưỡng của Signup
+      crowdedThreshold: 500,
       builder: (context, isCrowded) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +34,8 @@ class SignupView extends GetView<SignupController> {
             InputField(
               key: const ValueKey('name_field'),
               controller: controller.nameController,
-              validator: (value) => ValidatorUtil.validateEmpty(value, 'User Name'),
+              validator: (value) =>
+                  ValidatorUtil.validateEmpty(value, 'User Name'),
               hintText: 'Scott',
               labelText: 'User Name',
               prefixIcon: AppAsset.mail_01,

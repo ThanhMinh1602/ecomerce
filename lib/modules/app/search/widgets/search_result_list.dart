@@ -9,14 +9,16 @@ class SearchResultList extends GetView<SearchProductController> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded( // Giữ nguyên Expanded vì nó nằm trong Column của SearchView
+    return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(() => Text(
-            controller.searchQuery.isEmpty ? "Propose" : "Search Result",
-            style: AppStyle.contentBold,
-          )),
+          Obx(
+            () => Text(
+              controller.searchQuery.isEmpty ? "Propose" : "Search Result",
+              style: AppStyle.contentBold,
+            ),
+          ),
           const SizedBox(height: 16),
 
           Expanded(

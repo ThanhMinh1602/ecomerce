@@ -49,8 +49,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
         Obx(
           () => ColorDotList(
             colors: controller.currentProduct.value.colors,
-            selectedColor: controller.selectedColor.value, 
-            onColorSelected: controller.selectColor, 
+            selectedColor: controller.selectedColor.value,
+            onColorSelected: controller.selectColor,
             spacing: 4,
             size: 22,
           ),
@@ -60,8 +60,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
           () => ProductSizeAndRating(
             sizes: controller.currentProduct.value.sizes,
             rating: controller.currentProduct.value.rating,
-            selectedSize: controller.selectedSize.value, 
-            onSizeSelected: controller.selectSize, 
+            selectedSize: controller.selectedSize.value,
+            onSizeSelected: controller.selectSize,
           ),
         ),
         const SizedBox(height: 24),

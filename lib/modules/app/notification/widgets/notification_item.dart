@@ -5,7 +5,6 @@ import '../../../../../core/constants/app_asset.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/constants/app_style.dart';
 
-
 class NotificationItem extends StatelessWidget {
   final NotificationType type;
   final String title;
@@ -73,7 +72,9 @@ class NotificationItem extends StatelessWidget {
   }
 
   Widget _buildLeadingIcon() {
-    if (type == NotificationType.order && productImageUrl != null && productImageUrl!.isNotEmpty) {
+    if (type == NotificationType.order &&
+        productImageUrl != null &&
+        productImageUrl!.isNotEmpty) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: Image.network(
@@ -86,6 +87,7 @@ class NotificationItem extends StatelessWidget {
     }
     return SvgPicture.asset(type.iconPath, width: 60);
   }
+
   Widget _buildMessageText() {
     final defaultStyle = AppStyle.smallContentRegular.copyWith(
       color: AppColor.k949494,

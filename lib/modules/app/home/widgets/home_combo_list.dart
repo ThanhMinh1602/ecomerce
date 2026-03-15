@@ -14,17 +14,21 @@ class HomeComboList extends GetView<HomeController> {
       children: [
         Text('Combo', style: AppStyle.smallContentBold),
         const SizedBox(height: 16.0),
-        Obx(() => controller.comboProducts.isEmpty
-            ? const Text("Đang cập nhật Combo...")
-            : ListView.separated(
-          itemCount: controller.comboProducts.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return HorizontalProductWidget(product: controller.comboProducts[index]);
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: 16.0),
-        )),
+        Obx(
+          () => controller.comboProducts.isEmpty
+              ? const Text("Đang cập nhật Combo...")
+              : ListView.separated(
+                  itemCount: controller.comboProducts.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return HorizontalProductWidget(
+                      product: controller.comboProducts[index],
+                    );
+                  },
+                  separatorBuilder: (_, __) => const SizedBox(height: 16.0),
+                ),
+        ),
       ],
     );
   }

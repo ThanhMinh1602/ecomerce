@@ -11,8 +11,8 @@ class HomeBestSeller extends GetView<HomeController> {
     return Obx(() {
       return HorizontalProductListSection(
         title: controller.currentTab.value,
-        products: controller.bestSellers.toList(), 
-        isLoading: controller.bestSellers.isEmpty, 
+        products: controller.bestSellers.toList(),
+        isLoading: controller.bestSellers.isEmpty,
       );
     });
   }

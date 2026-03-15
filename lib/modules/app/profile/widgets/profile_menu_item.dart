@@ -1,8 +1,6 @@
 import 'package:ecomerce/core/components/button/custom_menu_button.dart';
 import 'package:flutter/material.dart';
 
-
-
 class ProfileMenuItem extends StatelessWidget {
   final String iconPath;
   final String title;
@@ -17,12 +15,6 @@ class ProfileMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    return CustomMenuButton(
-      iconPath: iconPath,
-      title: title,
-      onTap: onTap,
-      
-    );
+    return CustomMenuButton(iconPath: iconPath, title: title, onTap: onTap);
   }
 }

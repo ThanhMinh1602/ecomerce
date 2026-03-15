@@ -19,7 +19,7 @@ class LoginView extends GetView<LoginController> {
     return AuthLayoutWrapper(
       isLoading: controller.isLoading,
       formKey: controller.formKey,
-      crowdedThreshold: 580, // Ngưỡng của Login
+      crowdedThreshold: 580,
       builder: (context, isCrowded) {
         return Column(
           children: [

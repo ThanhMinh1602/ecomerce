@@ -9,7 +9,6 @@ import 'package:ecomerce/modules/app/auth/widgets/submit_forgot_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
   const ForgotPasswordView({super.key});
 
@@ -19,7 +18,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
       appBar: const SmallAppBar(),
       isLoading: controller.isLoading,
       formKey: controller.formKey,
-      crowdedThreshold: 400, // Ngưỡng của Forgot Password
+      crowdedThreshold: 400,
       builder: (context, isCrowded) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

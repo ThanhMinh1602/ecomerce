@@ -24,7 +24,10 @@ class HomeCategoryTabs extends GetView<HomeController> {
               isSelected: isSelected,
               textStyle: AppStyle.smallContentBold,
               onTap: () => controller.currentTab(categories[index]),
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 4.0,
+              ),
             );
           });
         },

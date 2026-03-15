@@ -1,6 +1,6 @@
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/core/constants/app_style.dart';
-import 'package:ecomerce/modules/app/product_detail/widgets/review_card.dart'; // Import ReviewCard đã tạo
+import 'package:ecomerce/modules/app/product_detail/widgets/review_card.dart';
 import 'package:flutter/material.dart';
 
 class ProductReviewList extends StatelessWidget {
@@ -15,15 +15,13 @@ class ProductReviewList extends StatelessWidget {
           children: [
             Text('Reviews(112)', style: AppStyle.smallContentBold),
             GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: Text(
                 'see more',
                 style: AppStyle.smallContentRegular.copyWith(
                   color: AppColor.k949494,
                   fontSize: 12.0,
-                  decoration:
-                      TextDecoration.underline,
+                  decoration: TextDecoration.underline,
                 ),
               ),
             ),

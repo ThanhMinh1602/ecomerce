@@ -30,7 +30,6 @@ class CustomTextField extends StatefulWidget {
   final bool isNumber;
   final int maxLines;
 
-  // 1. ĐỔI SANG DYNAMIC ĐỂ NHẬN ĐƯỢC CẢ STRING LẪN ICONDATA
   final dynamic prefixIcon;
   final dynamic suffixIcon;
 
@@ -54,28 +53,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
     showPassword = widget.isPassword;
   }
 
-  // --- HÀM XỬ LÝ ICON THÔNG MINH ---
   Widget? _buildIcon(dynamic iconData) {
     if (iconData == null) return null;
 
     if (iconData is String) {
-      // Nếu là String -> Render SVG
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.5),
         child: SvgPicture.asset(iconData),
       );
     } else if (iconData is IconData) {
-      // Nếu là IconData -> Render Icon của Flutter
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.5),
-        child: Icon(
-          iconData,
-          color: AppColor.black500, // Bạn có thể tùy chỉnh màu mặc định ở đây
-          size: 24, // Size tương đương với SVG
-        ),
+        child: Icon(iconData, color: AppColor.black500, size: 24),
       );
     }
-    return null; // Đề phòng truyền sai kiểu
+    return null;
   }
 
   @override
@@ -93,8 +85,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.isNumber
           ? const TextInputType.numberWithOptions(decimal: true)
           : (widget.maxLines > 1
-          ? TextInputType.multiline
-          : TextInputType.text),
+                ? TextInputType.multiline
+                : TextInputType.text),
       inputFormatters: widget.isNumber
           ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))]
           : null,
@@ -106,20 +98,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
         fillColor: const Color(0xffffffff),
         filled: true,
 
-        // 2. GỌI HÀM RENDER ICON CHO PREFIX
         prefixIcon: _buildIcon(widget.prefixIcon),
 
-        // 3. GỌI HÀM RENDER ICON CHO SUFFIX (Kết hợp với logic Password)
         suffixIcon: widget.suffixIcon != null
             ? _buildIcon(widget.suffixIcon)
             : widget.isPassword
             ? InkWell(
-          onTap: () => setState(() => showPassword = !showPassword),
-          child: Icon(
-            showPassword ? Icons.visibility_off : Icons.visibility,
-            color: AppColor.k949494,
-          ),
-        )
+                onTap: () => setState(() => showPassword = !showPassword),
+                child: Icon(
+                  showPassword ? Icons.visibility_off : Icons.visibility,
+                  color: AppColor.k949494,
+                ),
+              )
             : null,
 
         contentPadding: const EdgeInsets.symmetric(

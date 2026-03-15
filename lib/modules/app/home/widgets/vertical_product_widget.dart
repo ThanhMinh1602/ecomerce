@@ -9,13 +9,15 @@ import 'package:ecomerce/modules/app/product_detail/controllers/product_detail_c
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-enum VerticalProductType{ home, detail}
+
+enum VerticalProductType { home, detail }
+
 class VerticalProductWidget extends StatelessWidget {
   const VerticalProductWidget({
     super.key,
     this.product,
-    this.heroTagPrefix = 'vertical_',  this.type = VerticalProductType.home,
-
+    this.heroTagPrefix = 'vertical_',
+    this.type = VerticalProductType.home,
   });
 
   final ProductModel? product;
@@ -30,14 +32,17 @@ class VerticalProductWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if(type == VerticalProductType.home){
-          Get.find<HomeController>().onTapProductDetail(product!, heroTagPrefix);
+        if (type == VerticalProductType.home) {
+          Get.find<HomeController>().onTapProductDetail(
+            product!,
+            heroTagPrefix,
+          );
         }
-        if(type == VerticalProductType.detail){
-        Get.find<ProductDetailController>().loadNewProduct(
-        product!, // Truyền product mới vào
-        'propose_${product!.id}', // Tạo một hero tag mới
-        );
+        if (type == VerticalProductType.detail) {
+          Get.find<ProductDetailController>().loadNewProduct(
+            product!,
+            'propose_${product!.id}',
+          );
         }
       },
       child: CustomCard(
@@ -51,14 +56,12 @@ class VerticalProductWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: product!.images.isNotEmpty
-                    ?
-                CldImageWidget(
-                          publicId: product!.images.first,
-                          height: 124,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-
+                    ? CldImageWidget(
+                        publicId: product!.images.first,
+                        height: 124,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
                     : Container(
                         height: 124,
                         width: double.infinity,

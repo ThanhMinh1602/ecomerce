@@ -9,12 +9,10 @@ class MyOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4, // 4 trạng thái đơn hàng
+      length: 4,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: SmallAppBar(
-          title: 'My Orders',
-        ),
+        appBar: SmallAppBar(title: 'My Orders'),
         body: Column(
           children: [
             TabBar(
@@ -34,7 +32,7 @@ class MyOrdersView extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  _buildOrderList(), // Gọi list cho từng tab
+                  _buildOrderList(),
                   _buildOrderList(),
                   _buildOrderList(),
                   _buildOrderList(),
@@ -47,11 +45,10 @@ class MyOrdersView extends StatelessWidget {
     );
   }
 
-  // Danh sách các thẻ đơn hàng
   Widget _buildOrderList() {
     return ListView.separated(
       padding: const EdgeInsets.all(24.0),
-      itemCount: 3, // Giả lập 3 đơn hàng
+      itemCount: 3,
       separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         return Container(
@@ -66,21 +63,39 @@ class MyOrdersView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Order #ORD-2026${index}306', style: AppStyle.smallContentBold),
-                  Text('Mar 06, 2026', style: AppStyle.smallContentRegular.copyWith(color: AppColor.k949494)),
+                  Text(
+                    'Order #ORD-2026${index}306',
+                    style: AppStyle.smallContentBold,
+                  ),
+                  Text(
+                    'Mar 06, 2026',
+                    style: AppStyle.smallContentRegular.copyWith(
+                      color: AppColor.k949494,
+                    ),
+                  ),
                 ],
               ),
               const Divider(height: 24, color: AppColor.black100),
 
-              // Giả lập hiển thị số lượng sản phẩm (bạn có thể tái sử dụng OrderItemsSectionWidget ở đây nếu muốn show chi tiết)
               Text('2 Items', style: AppStyle.smallContentRegular),
               const SizedBox(height: 12),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total Amount', style: AppStyle.smallContentRegular.copyWith(color: AppColor.k949494)),
-                  Text('\$120.00', style: AppStyle.smallContentBold.copyWith(color: AppColor.orange500, fontSize: 16.0)),
+                  Text(
+                    'Total Amount',
+                    style: AppStyle.smallContentRegular.copyWith(
+                      color: AppColor.k949494,
+                    ),
+                  ),
+                  Text(
+                    '\$120.00',
+                    style: AppStyle.smallContentBold.copyWith(
+                      color: AppColor.orange500,
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ],
               ),
             ],

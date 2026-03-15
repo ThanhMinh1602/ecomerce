@@ -9,7 +9,6 @@ class ProductSizeAndRating extends StatelessWidget {
   final List<String> sizes;
   final double rating;
 
-  // THÊM 2 BIẾN NÀY ĐỂ NHẬN STATE VÀ SỰ KIỆN TỪ CONTROLLER
   final String selectedSize;
   final ValueChanged<String> onSizeSelected;
 
@@ -28,14 +27,18 @@ class ProductSizeAndRating extends StatelessWidget {
       children: [
         Expanded(
           child: Wrap(
-            spacing: 8.0, // Tăng khoảng cách ra một chút cho dễ bấm
+            spacing: 8.0,
             runSpacing: 8.0,
-            children: sizes.map((size) => CategoryItem(
-              title: size,
-              textStyle: AppStyle.smallContentBold,
-              isSelected: size == selectedSize, // So sánh để đổi màu cam nếu được chọn
-              onTap: () => onSizeSelected(size), // Truyền tên size ra ngoài khi bấm
-            )).toList(),
+            children: sizes
+                .map(
+                  (size) => CategoryItem(
+                    title: size,
+                    textStyle: AppStyle.smallContentBold,
+                    isSelected: size == selectedSize,
+                    onTap: () => onSizeSelected(size),
+                  ),
+                )
+                .toList(),
           ),
         ),
         const SizedBox(width: 12.0),

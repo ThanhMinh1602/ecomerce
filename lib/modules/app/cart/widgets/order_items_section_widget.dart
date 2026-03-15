@@ -42,7 +42,7 @@ class OrderItemsSectionWidget extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
           child: CldImageWidget(
-           publicId:  item.image,
+            publicId: item.image,
             width: 64,
             height: 64,
             fit: BoxFit.cover,

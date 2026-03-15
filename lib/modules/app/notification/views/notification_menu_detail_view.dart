@@ -7,6 +7,6 @@ class NotificationMenuDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: SmallAppBar(title: Get.arguments.toString()),);
+    return Scaffold(appBar: SmallAppBar(title: Get.arguments.toString()));
   }
 }

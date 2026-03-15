@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../../../../core/constants/app_color.dart';
 import '../../../../../core/constants/app_asset.dart';
 
-
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
@@ -19,38 +18,31 @@ class ProfileView extends GetView<ProfileController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             Stack(
               alignment: Alignment.topCenter,
               children: [
-
                 Container(
                   height: 310,
                   decoration: BoxDecoration(
                     color: AppColor.orange500,
                     borderRadius: BorderRadius.vertical(
-                      bottom: Radius.elliptical(MediaQuery
-                          .of(context)
-                          .size
-                          .width, 90),
+                      bottom: Radius.elliptical(
+                        MediaQuery.of(context).size.width,
+                        90,
+                      ),
                     ),
                   ),
                 ),
 
-
                 Column(
                   children: [
+                    SizedBox(height: MediaQuery.of(context).padding.top + 20),
 
-                    SizedBox(height: MediaQuery
-                        .of(context)
-                        .padding
-                        .top + 20),
-
-                     ProfileHeaderInfo(
-                        name: controller.userName,
-                        email: controller.userEmail,
-                      avatarUrl: 'https://img.freepik.com/free-photo/handsome-businessman-suit-glasses-cross-arms-chest-look_176420-21750.jpg',
-
+                    ProfileHeaderInfo(
+                      name: controller.userName,
+                      email: controller.userEmail,
+                      avatarUrl:
+                          'https://img.freepik.com/free-photo/handsome-businessman-suit-glasses-cross-arms-chest-look_176420-21750.jpg',
                     ),
 
                     const SizedBox(height: 32),
@@ -89,7 +81,6 @@ class ProfileView extends GetView<ProfileController> {
                       Get.toNamed(AppRouter.myOrders);
                     },
                   ),
-
 
                   const SizedBox(height: 120),
                 ],

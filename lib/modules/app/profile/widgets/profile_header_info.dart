@@ -17,7 +17,6 @@ class ProfileHeaderInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Avatar tròn có viền trắng
         Container(
           width: 110,
           height: 110,

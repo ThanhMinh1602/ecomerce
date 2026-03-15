@@ -39,14 +39,17 @@ class AddressSelectorWidget extends StatelessWidget {
             children: [
               Text('Delivery information', style: AppStyle.smallContentBold),
               InkWell(
-                onTap: ()=> Get.toNamed(AppRouter.myDetails,arguments: true),
-                child: Text('Update', style: AppStyle.smallContentRegular.copyWith(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.blue,
-                  decorationThickness: 1.5,
-                )),
-              )
+                onTap: () => Get.toNamed(AppRouter.myDetails, arguments: true),
+                child: Text(
+                  'Update',
+                  style: AppStyle.smallContentRegular.copyWith(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.blue,
+                    decorationThickness: 1.5,
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),

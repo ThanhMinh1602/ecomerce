@@ -7,6 +7,7 @@ import 'package:ecomerce/modules/app/home/widgets/home_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecomerce/modules/app/home/controllers/home_controller.dart';
+
 class HomeView extends GetView<HomeController> {
   HomeView({super.key});
 
@@ -17,8 +18,10 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: HomeAppBar(),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 25.0)
-            .copyWith(bottom: 38 + 71 + 16.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 25.0,
+        ).copyWith(bottom: 38 + 71 + 16.0),
         children: [
           const HomeSearchField(),
           const SizedBox(height: 20.0),

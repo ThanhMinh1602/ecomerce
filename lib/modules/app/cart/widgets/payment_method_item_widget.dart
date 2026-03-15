@@ -6,7 +6,7 @@ import '../../../../../core/constants/app_style.dart';
 class PaymentMethodItemWidget extends StatelessWidget {
   final bool isSelected;
   final String title;
-  final List<String> icons; // Truyền icon Visa/MasterCard hoặc ApplePay vào đây
+  final List<String> icons;
   final VoidCallback onTap;
 
   const PaymentMethodItemWidget({
@@ -19,7 +19,6 @@ class PaymentMethodItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mã màu xanh lá như trong thiết kế
     const Color activeGreen = Color(0xFF4CAF50);
 
     return InkWell(
@@ -28,17 +27,17 @@ class PaymentMethodItemWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         decoration: BoxDecoration(
-          // Nền xanh nhạt nếu được chọn, ngược lại nền trắng
           color: isSelected ? activeGreen.withOpacity(0.08) : AppColor.white,
           borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
-            color: isSelected ? activeGreen.withOpacity(0.5) : AppColor.black100.withOpacity(0.5),
+            color: isSelected
+                ? activeGreen.withOpacity(0.5)
+                : AppColor.black100.withOpacity(0.5),
             width: 1.0,
           ),
         ),
         child: Row(
           children: [
-            // Vòng tròn Check
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 24,
@@ -65,10 +64,12 @@ class PaymentMethodItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            ...icons.map((e)=>Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Image.asset(e, width: 32.0),
-            ))
+            ...icons.map(
+              (e) => Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Image.asset(e, width: 32.0),
+              ),
+            ),
           ],
         ),
       ),

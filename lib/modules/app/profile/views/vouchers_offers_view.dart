@@ -13,7 +13,7 @@ class VouchersOffersView extends StatelessWidget {
       appBar: const SmallAppBar(title: 'Vouchers & Offers'),
       body: ListView.separated(
         padding: const EdgeInsets.all(24.0),
-        itemCount: 4, // Giả lập 4 voucher
+        itemCount: 4,
         separatorBuilder: (_, __) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
           return _buildVoucherCard(
@@ -26,7 +26,11 @@ class VouchersOffersView extends StatelessWidget {
     );
   }
 
-  Widget _buildVoucherCard({required String title, required String desc, required String code}) {
+  Widget _buildVoucherCard({
+    required String title,
+    required String desc,
+    required String code,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -38,7 +42,7 @@ class VouchersOffersView extends StatelessWidget {
             color: AppColor.orange500.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Row(
@@ -61,7 +65,13 @@ class VouchersOffersView extends StatelessWidget {
               children: [
                 Text(title, style: AppStyle.smallContentBold),
                 const SizedBox(height: 4),
-                Text(desc, style: AppStyle.smallContentRegular.copyWith(color: AppColor.k949494, fontSize: 12.0)),
+                Text(
+                  desc,
+                  style: AppStyle.smallContentRegular.copyWith(
+                    color: AppColor.k949494,
+                    fontSize: 12.0,
+                  ),
+                ),
               ],
             ),
           ),
@@ -72,9 +82,18 @@ class VouchersOffersView extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.orange500,
               elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
             ),
-            child: Text('Use', style: AppStyle.smallContentBold.copyWith(color: Colors.white, fontSize: 13.0)),
+            child: Text(
+              'Use',
+              style: AppStyle.smallContentBold.copyWith(
+                color: Colors.white,
+                fontSize: 13.0,
+              ),
+            ),
           ),
         ],
       ),
