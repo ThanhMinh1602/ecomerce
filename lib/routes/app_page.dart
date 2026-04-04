@@ -22,6 +22,7 @@ import 'package:ecomerce/modules/app/onboarding/views/onboarding_view.dart';
 import 'package:ecomerce/modules/app/product_detail/bindings/product_detail_binding.dart';
 import 'package:ecomerce/modules/app/product_detail/views/product_detail_view.dart';
 import 'package:ecomerce/modules/app/profile/bindings/my_detail_binding.dart';
+import 'package:ecomerce/modules/app/profile/bindings/my_orders_binding.dart';
 import 'package:ecomerce/modules/app/profile/bindings/profile_binding.dart';
 import 'package:ecomerce/modules/app/profile/views/my_details_view.dart';
 import 'package:ecomerce/modules/app/profile/views/my_orders_view.dart';
@@ -79,7 +80,7 @@ class AppPage {
     GetPage(
       name: AppRouter.dashboard,
       page: () => const DashboardView(),
-      bindings:[ DashboardBinding(),CartBinding(), ProfileBinding()],
+      bindings: [DashboardBinding(), CartBinding(), ProfileBinding()],
     ),
     GetPage(
       name: AppRouter.home,
@@ -133,8 +134,9 @@ class AppPage {
     GetPage(
       name: AppRouter.myOrders,
       page: () => const MyOrdersView(),
-      binding: ProfileBinding(),
+      binding: MyOrdersBinding(),
     ),
+
     GetPage(
       name: AppRouter.vouchersOffers,
       page: () => const VouchersOffersView(),
