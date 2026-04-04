@@ -84,7 +84,7 @@ class NotificationItem extends StatelessWidget {
         ),
       );
     }
-    return SvgPicture.asset(type.iconPath, width: 60);
+    return Image.asset(type.iconPath, width: 60);
   }
   Widget _buildMessageText() {
     final defaultStyle = AppStyle.smallContentRegular.copyWith(

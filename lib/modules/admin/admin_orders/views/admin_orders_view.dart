@@ -1,3 +1,4 @@
+import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:ecomerce/data/enums/order_status.dart';
 import 'package:ecomerce/modules/admin/admin_dashboard/widgets/admin_sidebar.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,10 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
       backgroundColor: const Color(0xFFF5F6FA),
       body: Row(
         children: [
-          const AdminSidebar(), // Thanh menu bên trái
+          const AdminSidebar(),
           Expanded(
             child: Column(
               children: [
-                // --- TOPBAR ---
                 Container(
                   height: 70,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -39,21 +39,28 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Obx(() => Text(
-                          'Tổng: ${controller.orders.length} đơn',
-                          style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-                        )),
+                        child: Obx(
+                          () => Text(
+                            'Tổng: ${controller.orders.length} đơn',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
 
-                // --- CONTENT BODY ---
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -72,20 +79,22 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                       ),
                       child: Obx(() {
                         if (controller.orders.isEmpty) {
-                          return const Center(child: Text('Chưa có đơn hàng nào.'));
+                          return const Center(
+                            child: Text('Chưa có đơn hàng nào.'),
+                          );
                         }
 
                         return Column(
                           children: [
-                            // Header của bảng
                             _buildTableHeader(),
                             const Divider(height: 1),
-                            // Danh sách đơn hàng
+
                             Expanded(
                               child: ListView.separated(
                                 padding: const EdgeInsets.all(16),
                                 itemCount: controller.orders.length,
-                                separatorBuilder: (context, index) => const Divider(height: 32),
+                                separatorBuilder: (context, index) =>
+                                    const Divider(height: 32),
                                 itemBuilder: (context, index) {
                                   final order = controller.orders[index];
                                   return _buildOrderRow(order);
@@ -106,7 +115,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
     );
   }
 
-  // --- WIDGET HEADER BẢNG ---
   Widget _buildTableHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -116,55 +124,88 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
       ),
       child: const Row(
         children: [
-          Expanded(flex: 2, child: Text('Mã ĐH', style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 3, child: Text('Khách hàng', style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text('Tổng tiền', style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text('Trạng thái', style: TextStyle(fontWeight: FontWeight.bold))),
-          SizedBox(width: 50, child: Text('Xem', style: TextStyle(fontWeight: FontWeight.bold,))),
+          Expanded(
+            flex: 2,
+            child: Text('Mã ĐH', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              'Khách hàng',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Tổng tiền',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Trạng thái',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            width: 50,
+            child: Text('Xem', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
         ],
       ),
     );
   }
 
-  // --- WIDGET TỪNG DÒNG ĐƠN HÀNG ---
   Widget _buildOrderRow(dynamic order) {
     return Row(
       children: [
-        // Mã đơn hàng
         Expanded(
-            flex: 2,
-            child: Text(
-              order.id.toString().substring(0, 8).toUpperCase(),
-              style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.blue),
-            )
+          flex: 2,
+          child: Text(
+            order.id.toString().substring(0, 8).toUpperCase(),
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.blue,
+            ),
+          ),
         ),
 
-        // Khách hàng
         Expanded(
           flex: 3,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(order.customerName, style: const TextStyle(fontWeight: FontWeight.w500)),
-              Text('${order.items.length} sản phẩm', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                order.customerName,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Text(
+                '${order.items.length} sản phẩm',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
             ],
           ),
         ),
 
-        // Tổng tiền
         Expanded(
           flex: 2,
-          child: Text('\$${order.totalAmount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600)),
+          child: Text(
+            '\$${order.totalAmount.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
 
-        // Trạng thái (Dropdown)
         Expanded(
           flex: 2,
           child: Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
-              border: Border.all(color: _getStatusColor(order.status).withOpacity(0.5)),
+              border: Border.all(
+                color: _getStatusColor(order.status).withOpacity(0.5),
+              ),
               borderRadius: BorderRadius.circular(8),
               color: _getStatusColor(order.status).withOpacity(0.1),
             ),
@@ -172,8 +213,15 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
               child: DropdownButton<OrderStatus>(
                 value: order.status,
                 isExpanded: true,
-                icon: Icon(Icons.arrow_drop_down, color: _getStatusColor(order.status)),
-                style: TextStyle(color: _getStatusColor(order.status), fontWeight: FontWeight.bold, fontSize: 13),
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: _getStatusColor(order.status),
+                ),
+                style: TextStyle(
+                  color: _getStatusColor(order.status),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
                 onChanged: (OrderStatus? newValue) {
                   if (newValue != null && newValue != order.status) {
                     controller.changeOrderStatus(order.id, newValue);
@@ -183,11 +231,11 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                   return DropdownMenuItem<OrderStatus>(
                     value: status,
                     child: Text(
-                        status.title,
-                        style: TextStyle(
-                            color: _getStatusColor(status),
-                            fontWeight: FontWeight.bold
-                        )
+                      status.title,
+                      style: TextStyle(
+                        color: _getStatusColor(status),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -196,7 +244,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
           ),
         ),
 
-        // Nút xem chi tiết
         SizedBox(
           width: 50,
           child: IconButton(
@@ -209,7 +256,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
     );
   }
 
-  // --- POPUP CHI TIẾT ĐƠN HÀNG ---
   void _showOrderDetailsDialog(dynamic order) {
     Get.dialog(
       Dialog(
@@ -221,13 +267,15 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Popup
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Chi tiết đơn hàng: #${order.id.toString().substring(0, 8).toUpperCase()}',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -237,7 +285,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
               ),
               const Divider(height: 32),
 
-              // Nội dung cuộn
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -250,11 +297,27 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Thông tin giao hàng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue)),
+                                const Text(
+                                  'Thông tin giao hàng',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                  ),
+                                ),
                                 const SizedBox(height: 12),
-                                _buildDetailText('Khách hàng:', order.customerName),
-                                _buildDetailText('Ngày đặt:', controller.formatDate(order.createdAt)),
-                                _buildDetailText('Địa chỉ:', order.shippingAddress),
+                                _buildDetailText(
+                                  'Khách hàng:',
+                                  order.customerName,
+                                ),
+                                _buildDetailText(
+                                  'Ngày đặt:',
+                                  controller.formatDate(order.createdAt),
+                                ),
+                                _buildDetailText(
+                                  'Địa chỉ:',
+                                  order.shippingAddress,
+                                ),
                               ],
                             ),
                           ),
@@ -263,17 +326,41 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Thông tin thanh toán', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue)),
+                                const Text(
+                                  'Thông tin thanh toán',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                  ),
+                                ),
                                 const SizedBox(height: 12),
-                                _buildDetailText('Phương thức:', order.paymentMethod.title),
+                                _buildDetailText(
+                                  'Phương thức:',
+                                  order.paymentMethod.title,
+                                ),
                                 if (order.paymentId != null)
                                   _buildDetailText('Mã GD:', order.paymentId!),
                                 if (order.payerEmail != null)
-                                  _buildDetailText('Email PayPal:', order.payerEmail!),
+                                  _buildDetailText(
+                                    'Email PayPal:',
+                                    order.payerEmail!,
+                                  ),
                                 const SizedBox(height: 8),
-                                _buildDetailText('Phí Ship:', '\$${order.shippingFee.toStringAsFixed(2)}'),
-                                _buildDetailText('Giảm giá:', '-\$${order.discountAmount.toStringAsFixed(2)}', color: Colors.green),
-                                _buildDetailText('Tổng thanh toán:', '\$${order.totalAmount.toStringAsFixed(2)}', isBold: true),
+                                _buildDetailText(
+                                  'Phí Ship:',
+                                  '\$${order.shippingFee.toStringAsFixed(2)}',
+                                ),
+                                _buildDetailText(
+                                  'Giảm giá:',
+                                  '-\$${order.discountAmount.toStringAsFixed(2)}',
+                                  color: Colors.green,
+                                ),
+                                _buildDetailText(
+                                  'Tổng thanh toán:',
+                                  '\$${order.totalAmount.toStringAsFixed(2)}',
+                                  isBold: true,
+                                ),
                               ],
                             ),
                           ),
@@ -284,31 +371,87 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                       const Divider(),
                       const SizedBox(height: 16),
 
-                      const Text('Sản phẩm đã đặt', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue)),
+                      const Text(
+                        'Sản phẩm đã đặt',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.blue,
+                        ),
+                      ),
                       const SizedBox(height: 12),
-                      ...order.items.map<Widget>((item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 50, height: 50,
-                              decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
-                              child: const Icon(Icons.image_outlined, color: Colors.grey),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      ...order.items
+                          .map<Widget>(
+                            (item) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
                                 children: [
-                                  Text(item.name ?? 'Sản phẩm', style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  Text('Số lượng: ${item.quantity}', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child:
+                                          (item.image != null &&
+                                              item.image!.isNotEmpty)
+                                          ? CldImageWidget(
+                                              publicId: item.image!,
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return const Icon(
+                                                      Icons
+                                                          .broken_image_outlined,
+                                                      color: Colors.grey,
+                                                    );
+                                                  },
+                                            )
+                                          : const Icon(
+                                              Icons.image_outlined,
+                                              color: Colors.grey,
+                                            ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.name ?? 'Sản phẩm',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Số lượng: ${item.quantity}',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            Text('\$${(item.price * item.quantity).toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      )).toList(),
+                          )
+                          .toList(),
                     ],
                   ),
                 ),
@@ -320,21 +463,28 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
     );
   }
 
-  // --- TIỆN ÍCH DÀN TRANG TEXT ---
-  Widget _buildDetailText(String label, String value, {Color? color, bool isBold = false}) {
+  Widget _buildDetailText(
+    String label,
+    String value, {
+    Color? color,
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text(label, style: const TextStyle(color: Colors.grey))),
+          SizedBox(
+            width: 120,
+            child: Text(label, style: const TextStyle(color: Colors.grey)),
+          ),
           Expanded(
             child: Text(
-                value,
-                style: TextStyle(
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                  color: color ?? Colors.black87,
-                )
+              value,
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color ?? Colors.black87,
+              ),
             ),
           ),
         ],
@@ -342,7 +492,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
     );
   }
 
-  // --- TIỆN ÍCH MÀU SẮC ---
   Color _getStatusColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:

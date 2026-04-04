@@ -23,9 +23,11 @@ class OrderService extends GetxService {
         .where('userId', isEqualTo: user.id)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => OrderModel.fromJson(doc.data(), doc.id))
-        .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => OrderModel.fromJson(doc.data(), doc.id))
+              .toList(),
+        );
   }
 
   Stream<List<OrderModel>> streamAllOrders() {
@@ -33,12 +35,13 @@ class OrderService extends GetxService {
         .collection('orders')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => OrderModel.fromJson(doc.data(), doc.id))
-        .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => OrderModel.fromJson(doc.data(), doc.id))
+              .toList(),
+        );
   }
 
-  
   Future<bool> updateOrderStatus(String orderId, String newStatus) async {
     try {
       await _db.collection('orders').doc(orderId).update({'status': newStatus});
@@ -48,35 +51,43 @@ class OrderService extends GetxService {
       return false;
     }
   }
+
   Future<bool> createOrder(OrderModel order) async {
-    // 1. Khởi tạo một Batch (để thực hiện nhiều lệnh ghi cùng lúc)
     WriteBatch batch = _db.batch();
 
     try {
-      // --- LỆNH 1: LƯU ĐƠN HÀNG ---
+      // 1. Lưu thông tin đơn hàng
       DocumentReference orderRef = _db.collection('orders').doc(order.id);
       batch.set(orderRef, order.toJson());
 
-      // Duyệt qua danh sách sản phẩm trong đơn hàng
+      // 2. Xử lý từng sản phẩm
       for (var item in order.items) {
 
-        // --- LỆNH 2: TRỪ TỒN KHO TRONG DB ---
-        // Giả sử collection sản phẩm của bạn là 'products'
-        DocumentReference productRef = _db.collection('products').doc(item.productId);
-        batch.update(productRef, {
-          'stock': FieldValue.increment(-item.quantity), // Trừ đi số lượng khách đã mua
-        });
+        // --- CHỈ TRỪ KHO NẾU CÓ PRODUCT ID ---
+        if (item.productId != null && item.productId.toString().trim().isNotEmpty) {
+          DocumentReference productRef = _db.collection('products').doc(item.productId);
+          batch.set(
+              productRef,
+              {'stock': FieldValue.increment(-item.quantity)},
+              SetOptions(merge: true) // Dùng set merge để lỡ ID sai Firebase cũng tự tạo mới, không bị crash
+          );
+        } else {
+          debugPrint("Bỏ qua trừ kho vì productId bị rỗng.");
+        }
 
-        // --- LỆNH 3: XÓA SẢN PHẨM ĐÃ CHỌN KHỎI GIỎ HÀNG ---
-        // Giả sử giỏ hàng lưu tại: users/{userId}/cart/{cartItemId}
-        DocumentReference cartRef = _db.collection('users')
-            .doc(order.userId)
-            .collection('cart')
-            .doc(item.id); // Dùng ID của item trong giỏ hàng để xóa
-        batch.delete(cartRef);
+        // --- CHỈ XÓA GIỎ HÀNG NẾU CÓ ITEM ID VÀ USER ID ---
+        if (item.id.toString().trim().isNotEmpty && order.userId.isNotEmpty) {
+          DocumentReference cartRef = _db.collection('users')
+              .doc(order.userId)
+              .collection('cart')
+              .doc(item.id);
+          batch.delete(cartRef);
+        } else {
+          debugPrint("Bỏ qua xóa giỏ hàng vì item.id bị rỗng.");
+        }
       }
 
-      // 2. Chốt Batch (Gửi toàn bộ lệnh lên Firebase cùng một lúc)
+      // 3. Thực thi lưu toàn bộ lên server
       await batch.commit();
 
 
