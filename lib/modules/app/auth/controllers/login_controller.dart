@@ -19,7 +19,6 @@ class LoginController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-
     emailController.addListener(_checkValidation);
     passwordController.addListener(_checkValidation);
   }
@@ -55,17 +54,56 @@ class LoginController extends BaseController {
     }
   }
 
+  // ==========================================
+  // THÊM MỚI: Xử lý sự kiện đăng nhập MXH
+  // ==========================================
+
+  Future<void> loginWithGoogle() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    showLoading();
+
+    final isSuccess = await _authService.loginWithGoogle();
+
+    hideLoading();
+
+    if (isSuccess) {
+      Get.offAllNamed(AppRouter.dashboard);
+    } else {
+      showError(
+        'Đăng nhập Google thất bại',
+        title: 'Đã có lỗi xảy ra hoặc bạn đã hủy thao tác. Vui lòng thử lại.',
+      );
+    }
+  }
+
+  Future<void> loginWithFacebook() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    showLoading();
+
+    final isSuccess = await _authService.loginWithFacebook();
+
+    hideLoading();
+
+    if (isSuccess) {
+      Get.offAllNamed(AppRouter.dashboard);
+    } else {
+      showError(
+        'Đăng nhập Facebook thất bại',
+        title: 'Đã có lỗi xảy ra hoặc bạn đã hủy thao tác. Vui lòng thử lại.',
+      );
+    }
+  }
+
+  // ==========================================
+
   Future<void> onTapSignup() async {
     final result = await Get.toNamed(Get.currentRoute + AppRouter.signup);
-    print('result123: $result');
     if (result != null) {
       emailController.text = result;
-
       showSuccess(
         'Đăng ký thành công',
         title: 'Tài khoản với email $result đã sẵn sàng.',
       );
-
       _checkValidation();
     }
   }
@@ -74,12 +112,9 @@ class LoginController extends BaseController {
     final result = await Get.toNamed(
       Get.currentRoute + AppRouter.forgotPassword,
     );
-    print('result123: $result');
     if (result != null) {
       emailController.text = result;
-
       showSuccess('Gửi mail thành công', title: 'Kiểm tra $result');
-
       _checkValidation();
     }
   }

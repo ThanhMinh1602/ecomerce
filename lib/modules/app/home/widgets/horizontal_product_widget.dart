@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+
+import 'package:ecomerce/data/models/cart_model.dart';
+import 'package:ecomerce/data/services/cart_service.dart';
+
 class HorizontalProductWidget extends StatelessWidget {
   const HorizontalProductWidget({
     super.key,
@@ -23,10 +27,8 @@ class HorizontalProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'en_US');
-
     return GestureDetector(
-      onTap: () =>
-          Get.find<HomeController>().onTapProductDetail(product, heroTagPrefix),
+      onTap: () => Get.find<HomeController>().onTapProductDetail(product, heroTagPrefix),
       child: CustomCard(
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
         child: Row(
@@ -38,17 +40,17 @@ class HorizontalProductWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.0),
                 child: product.images.isNotEmpty
                     ? CldImageWidget(
-                        publicId: product.images.first,
-                        height: 95,
-                        width: 110,
-                        fit: BoxFit.cover,
-                      )
+                  publicId: product.images.first,
+                  height: 95,
+                  width: 110,
+                  fit: BoxFit.cover,
+                )
                     : Container(
-                        width: 110,
-                        height: 95,
-                        color: Colors.grey[200],
-                        child: const Icon(Icons.image, color: Colors.grey),
-                      ),
+                  width: 110,
+                  height: 95,
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.image, color: Colors.grey),
+                ),
               ),
             ),
             const SizedBox(width: 16.0),
@@ -76,11 +78,16 @@ class HorizontalProductWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   if (product.colors.isNotEmpty)
-                    ColorDotList(colors: product.colors, onColorSelected: (String value) {  },size: 18.0,spacing: 4.0,),
+                    ColorDotList(
+                      colors: product.colors,
+                      onColorSelected: (String value) {},
+                      size: 18.0,
+                      spacing: 4.0,
+                    ),
                 ],
               ),
             ),
-            SizedBox(width: 12.0),
+            const SizedBox(width: 12.0),
 
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -105,7 +112,44 @@ class HorizontalProductWidget extends StatelessWidget {
                   ),
                 const SizedBox(height: 8.0),
 
-                const AddToCartButton(),
+                
+                AddToCartButton(
+                  onTap: () async {
+                    try {
+                      final cartItem = CartItemModel(
+                        id: '',
+                        productId: product.id,
+                        name: product.name,
+                        image: product.images.isNotEmpty ? product.images.first : '',
+                        price: product.price,
+                        quantity: 1,
+                        selectedColor: product.colors.isNotEmpty ? product.colors.first : null,
+                        availableColors: product.colors,
+                        selectedSize: null, 
+                        availableSizes: [],
+                      );
+
+                      await Get.find<CartService>().addToCart(cartItem);
+
+                      Get.snackbar(
+                        'Thành công',
+                        'Đã thêm ${product.name} vào giỏ hàng!',
+                        backgroundColor: Colors.green.shade600,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.TOP,
+                        duration: const Duration(seconds: 2),
+                        margin: const EdgeInsets.all(16),
+                      );
+                    } catch (e) {
+                      Get.snackbar(
+                        'Lỗi',
+                        'Không thể thêm vào giỏ hàng.',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ],

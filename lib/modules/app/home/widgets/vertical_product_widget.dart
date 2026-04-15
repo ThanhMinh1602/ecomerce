@@ -9,13 +9,18 @@ import 'package:ecomerce/modules/app/product_detail/controllers/product_detail_c
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-enum VerticalProductType{ home, detail}
+
+import 'package:ecomerce/data/models/cart_model.dart';
+import 'package:ecomerce/data/services/cart_service.dart';
+
+enum VerticalProductType { home, detail }
+
 class VerticalProductWidget extends StatelessWidget {
   const VerticalProductWidget({
     super.key,
     this.product,
-    this.heroTagPrefix = 'vertical_',  this.type = VerticalProductType.home,
-
+    this.heroTagPrefix = 'vertical_',
+    this.type = VerticalProductType.home,
   });
 
   final ProductModel? product;
@@ -30,14 +35,16 @@ class VerticalProductWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if(type == VerticalProductType.home){
-          Get.find<HomeController>().onTapProductDetail(product!, heroTagPrefix);
-        }
-        if(type == VerticalProductType.detail){
-        Get.find<ProductDetailController>().loadNewProduct(
-        product!, // Truyền product mới vào
-        'propose_${product!.id}', // Tạo một hero tag mới
-        );
+        if (type == VerticalProductType.home) {
+          Get.find<HomeController>().onTapProductDetail(
+            product!,
+            heroTagPrefix,
+          );
+        } else if (type == VerticalProductType.detail) {
+          Get.find<ProductDetailController>().loadNewProduct(
+            product!,
+            'propose_${product!.id}',
+          );
         }
       },
       child: CustomCard(
@@ -51,14 +58,12 @@ class VerticalProductWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: product!.images.isNotEmpty
-                    ?
-                CldImageWidget(
-                          publicId: product!.images.first,
-                          height: 124,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-
+                    ? CldImageWidget(
+                        publicId: product!.images.first,
+                        height: 124,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
                     : Container(
                         height: 124,
                         width: double.infinity,
@@ -109,7 +114,7 @@ class VerticalProductWidget extends StatelessWidget {
                     if (product!.oldPrice != null && product!.oldPrice! > 0)
                       Text(
                         currencyFormat.format(product!.oldPrice),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColor.k949494,
                           fontSize: 11.0,
                           decoration: TextDecoration.lineThrough,
@@ -118,7 +123,47 @@ class VerticalProductWidget extends StatelessWidget {
                   ],
                 ),
 
-                const AddToCartButton(),
+                AddToCartButton(
+                  onTap: () async {
+                    try {
+                      final cartItem = CartItemModel(
+                        id: '',
+                        productId: product!.id,
+                        name: product!.name,
+                        image: product!.images.isNotEmpty
+                            ? product!.images.first
+                            : '',
+                        price: product!.price,
+                        quantity: 1,
+                        selectedColor: product!.colors.isNotEmpty
+                            ? product!.colors.first
+                            : null,
+                        availableColors: product!.colors,
+                        selectedSize: null,
+                        availableSizes: [],
+                      );
+
+                      await Get.find<CartService>().addToCart(cartItem);
+
+                      Get.snackbar(
+                        'Thành công',
+                        'Đã thêm ${product!.name} vào giỏ hàng!',
+                        backgroundColor: Colors.green.shade600,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.TOP,
+                        duration: const Duration(seconds: 2),
+                        margin: const EdgeInsets.all(16),
+                      );
+                    } catch (e) {
+                      Get.snackbar(
+                        'Lỗi',
+                        'Không thể thêm vào giỏ hàng.',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ],

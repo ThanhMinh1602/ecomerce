@@ -144,7 +144,7 @@ class ProfileView extends GetView<ProfileController> {
                       iconData: Icons.person_outline,
                       title: 'My Details',
                       subtitle: 'Thông tin cá nhân, địa chỉ',
-                      onTap: controller.onTapMyDetail, // Hoặc Get.toNamed(AppRouter.myDetails)
+                      onTap: controller.onTapMyDetail,
                     ),
 
                     // ITEM 2: Chuyển đến Vouchers & Offers
@@ -174,12 +174,33 @@ class ProfileView extends GetView<ProfileController> {
                       subtitle: 'Bảo mật tài khoản',
                       onTap: () {},
                     ),
+
+                    // --- CẬP NHẬT NÚT LOG OUT VỚI DIALOG XÁC NHẬN ---
                     ProfileMenuItem(
                       iconData: Icons.logout_outlined,
                       title: 'Log Out',
                       subtitle: 'Đăng xuất tài khoản',
-                      iconColor: const Color(0xFFD34C4C), // Màu đỏ cảnh báo
-                      onTap: controller.logout,
+                      iconColor: const Color(0xFFD34C4C),
+                      onTap: () {
+                        Get.defaultDialog(
+                          title: 'Confirm Log Out',
+                          titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          middleText: 'Are you sure you want to log out of your account?',
+                          middleTextStyle: const TextStyle(fontSize: 14, color: Colors.black54),
+                          backgroundColor: Colors.white,
+                          radius: 16,
+                          textCancel: 'Cancel',
+                          cancelTextColor: textBrown,
+                          textConfirm: 'Log Out',
+                          confirmTextColor: Colors.white,
+                          buttonColor: const Color(0xFFD34C4C), // Trùng màu đỏ với icon
+                          onConfirm: () {
+                            Get.back(); // Đóng Dialog trước
+                            controller.logout(); // Sau đó mới gọi hàm đăng xuất
+                          },
+                          onCancel: () {},
+                        );
+                      },
                     ),
                     const SizedBox(height: 40),
                   ],

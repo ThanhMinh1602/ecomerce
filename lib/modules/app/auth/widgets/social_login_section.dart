@@ -1,9 +1,11 @@
 import 'package:ecomerce/core/constants/app_asset.dart';
+import 'package:ecomerce/modules/app/auth/controllers/login_controller.dart';
 import 'package:ecomerce/modules/app/auth/widgets/or_continue_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
-class SocialLoginSection extends StatelessWidget {
+class SocialLoginSection extends GetView<LoginController> {
   const SocialLoginSection({super.key});
 
   @override
@@ -19,9 +21,26 @@ class SocialLoginSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 16.0,
             children: [
-              SvgPicture.asset(AppAsset.facebook),
-              SvgPicture.asset(AppAsset.apple),
-              SvgPicture.asset(AppAsset.google),
+              // Nút Facebook
+              GestureDetector(
+                onTap: () => controller.loginWithFacebook(),
+                child: SvgPicture.asset(AppAsset.facebook),
+              ),
+
+              // Nút Apple (Bạn chưa làm chức năng này nên tạm để trống)
+              GestureDetector(
+                onTap: () {
+                  // controller.loginWithApple();
+                  print('Chưa cấu hình đăng nhập Apple');
+                },
+                child: SvgPicture.asset(AppAsset.apple),
+              ),
+
+              // Nút Google
+              GestureDetector(
+                onTap: () => controller.loginWithGoogle(),
+                child: SvgPicture.asset(AppAsset.google),
+              ),
             ],
           ),
           const Spacer(),
