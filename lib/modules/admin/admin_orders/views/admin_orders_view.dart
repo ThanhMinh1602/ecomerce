@@ -18,6 +18,7 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
           Expanded(
             child: Column(
               children: [
+                // HEADER
                 Container(
                   height: 70,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -28,7 +29,6 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'Quản lý Đơn hàng',
@@ -38,6 +38,8 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                           color: Colors.black87,
                         ),
                       ),
+                      Spacer(),
+                      // Nút hiển thị tổng số đơn
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -49,10 +51,37 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                         ),
                         child: Obx(
                           () => Text(
-                            'Tổng: ${controller.orders.length} đơn',
+                            'Tổng: ${controller.filteredOrders.length} đơn',
                             style: const TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ), // Thanh tìm kiếm
+                      SizedBox(width: 16.0),
+                      SizedBox(
+                        width: 300,
+                        height: 40,
+                        child: TextField(
+                          onChanged: controller.searchOrder,
+                          decoration: InputDecoration(
+                            hintText: 'Tìm mã ĐH, tên khách...',
+                            prefixIcon: const Icon(Icons.search, size: 20),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                           ),
                         ),
@@ -61,6 +90,7 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                   ),
                 ),
 
+                // BODY CONTENT
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -78,9 +108,15 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                         ],
                       ),
                       child: Obx(() {
-                        if (controller.orders.isEmpty) {
+                        if (controller.allOrders.isEmpty) {
                           return const Center(
-                            child: Text('Chưa có đơn hàng nào.'),
+                            child: Text('Chưa có đơn hàng nào trong hệ thống.'),
+                          );
+                        }
+
+                        if (controller.filteredOrders.isEmpty) {
+                          return const Center(
+                            child: Text('Không tìm thấy đơn hàng phù hợp.'),
                           );
                         }
 
@@ -92,11 +128,13 @@ class AdminOrdersView extends GetView<AdminOrdersController> {
                             Expanded(
                               child: ListView.separated(
                                 padding: const EdgeInsets.all(16),
-                                itemCount: controller.orders.length,
+                                itemCount: controller.filteredOrders.length,
                                 separatorBuilder: (context, index) =>
                                     const Divider(height: 32),
                                 itemBuilder: (context, index) {
-                                  final order = controller.orders[index];
+                                  // Sử dụng filteredOrders
+                                  final order =
+                                      controller.filteredOrders[index];
                                   return _buildOrderRow(order);
                                 },
                               ),

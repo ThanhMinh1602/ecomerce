@@ -1,8 +1,7 @@
-import 'package:ecomerce/modules/admin/admin_dashboard/widgets/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/admin_customers_controller.dart';
-// import '../../admin_dashboard/widgets/admin_sidebar.dart'; // Mở comment khi ráp Sidebar
+import '../../admin_dashboard/widgets/admin_sidebar.dart';
 
 class AdminCustomersView extends GetView<AdminCustomersController> {
   const AdminCustomersView({super.key});
@@ -13,13 +12,13 @@ class AdminCustomersView extends GetView<AdminCustomersController> {
       backgroundColor: const Color(0xFFF5F6FA),
       body: Row(
         children: [
-          const AdminSidebar(), // Thanh menu bên trái
+          const AdminSidebar(),
           Expanded(
             child: Column(
               children: [
-                // Header Topbar
                 Container(
                   height: 70,
+                  width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -38,20 +37,39 @@ class AdminCustomersView extends GetView<AdminCustomersController> {
                           color: Colors.black87,
                         ),
                       ),
-                      ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add, size: 18),
-                        label: const Text('Thêm khách hàng'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          foregroundColor: Colors.white,
+
+                      // Thanh tìm kiếm
+                      SizedBox(
+                        width: 300,
+                        height: 40,
+                        child: TextField(
+                          onChanged: controller.searchCustomer,
+                          decoration: InputDecoration(
+                            hintText: 'Tìm theo tên, email, SĐT...',
+                            prefixIcon: const Icon(Icons.search, size: 20),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                // Content Body (Bảng khách hàng sẽ nằm ở đây)
+                // Content Body (Bảng khách hàng)
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -68,12 +86,152 @@ class AdminCustomersView extends GetView<AdminCustomersController> {
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Khu vực hiển thị danh sách Khách hàng',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
-                        ),
-                      ),
+                      child: Obx(() {
+                        if (controller.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        if (controller.filteredCustomers.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'Không tìm thấy khách hàng nào.',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            ),
+                          );
+                        }
+
+                        // Dùng LayoutBuilder để đo chiều ngang thực tế của Container chứa bảng
+                        return LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Cấu hình các khoảng cách mặc định của DataTable
+                            const double horizontalMargin = 24.0;
+                            const double columnSpacing = 20.0;
+
+                            // Tổng chiều rộng có thể sử dụng (Trừ đi lề trái phải và khoảng cách giữa 4 cột)
+                            final double availableWidth =
+                                constraints.maxWidth -
+                                (horizontalMargin * 2) -
+                                (columnSpacing * 3);
+
+                            // Chia đều cho 4 cột
+                            final double columnWidth = availableWidth / 4;
+
+                            return SingleChildScrollView(
+                              // Chỉ giữ cuộn dọc
+                              child: DataTable(
+                                horizontalMargin: horizontalMargin,
+                                columnSpacing: columnSpacing,
+                                headingRowColor:
+                                    MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade50,
+                                    ),
+                                columns: [
+                                  DataColumn(
+                                    label: SizedBox(
+                                      width: columnWidth,
+                                      child: const Text(
+                                        'ID',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: SizedBox(
+                                      width: columnWidth,
+                                      child: const Text(
+                                        'Tên khách hàng',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: SizedBox(
+                                      width: columnWidth,
+                                      child: const Text(
+                                        'Email',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: SizedBox(
+                                      width: columnWidth,
+                                      child: const Text(
+                                        'Số điện thoại',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                rows: controller.filteredCustomers.map((user) {
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(
+                                        SizedBox(
+                                          width: columnWidth,
+                                          child: Text(
+                                            user.id.length > 5
+                                                ? '${user.id.substring(0, 5)}...'
+                                                : user.id,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        SizedBox(
+                                          width: columnWidth,
+                                          child: Text(
+                                            user.name.isNotEmpty
+                                                ? user.name
+                                                : 'Chưa cập nhật',
+                                            overflow: TextOverflow
+                                                .ellipsis, // Cắt bớt nếu tên quá dài
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        SizedBox(
+                                          width: columnWidth,
+                                          child: Text(
+                                            user.email.isNotEmpty
+                                                ? user.email
+                                                : 'Chưa cập nhật',
+                                            overflow: TextOverflow
+                                                .ellipsis, // Cắt bớt nếu email quá dài
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        SizedBox(
+                                          width: columnWidth,
+                                          child: Text(
+                                            user.phone != null &&
+                                                    user.phone!.isNotEmpty
+                                                ? user.phone!
+                                                : 'Chưa cập nhật',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        );
+                      }),
                     ),
                   ),
                 ),

@@ -7,13 +7,47 @@ import 'package:get/get.dart';
 class AdminOrdersController extends BaseController {
   final OrderService _orderService = Get.find<OrderService>();
 
-  final RxList<OrderModel> orders = <OrderModel>[].obs;
+  // Lưu trữ toàn bộ đơn hàng từ stream
+  final RxList<OrderModel> allOrders = <OrderModel>[].obs;
+
+  // Lưu trữ danh sách đơn hàng đã được lọc để hiển thị lên UI
+  final RxList<OrderModel> filteredOrders = <OrderModel>[].obs;
+
+  // Lưu trữ từ khóa tìm kiếm hiện tại
+  final RxString searchQuery = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
 
-    orders.bindStream(_orderService.streamAllOrders());
+    // Lắng nghe sự thay đổi từ stream và cập nhật lại danh sách gốc
+    _orderService.streamAllOrders().listen((data) {
+      allOrders.value = data;
+      // Mỗi khi có dữ liệu mới (ví dụ có đơn hàng mới), áp dụng lại bộ lọc tìm kiếm
+      _applySearch();
+    });
+  }
+
+  // Hàm được gọi khi user gõ vào thanh tìm kiếm
+  void searchOrder(String query) {
+    searchQuery.value = query;
+    _applySearch();
+  }
+
+  // Hàm xử lý logic lọc đơn hàng
+  void _applySearch() {
+    if (searchQuery.value.trim().isEmpty) {
+      filteredOrders.value = allOrders;
+    } else {
+      final query = searchQuery.value.trim().toLowerCase();
+      filteredOrders.value = allOrders.where((order) {
+        final orderId = order.id.toLowerCase();
+        final customerName = order.customerName.toLowerCase();
+
+        // Tìm theo Mã ĐH hoặc Tên khách hàng
+        return orderId.contains(query) || customerName.contains(query);
+      }).toList();
+    }
   }
 
   Future<void> changeOrderStatus(String orderId, OrderStatus newStatus) async {

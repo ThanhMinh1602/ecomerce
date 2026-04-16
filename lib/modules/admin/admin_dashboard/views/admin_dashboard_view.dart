@@ -1,10 +1,12 @@
+import 'package:fl_chart/fl_chart.dart'; // Đảm bảo đã cài đặt package fl_chart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/admin_dashboard_controller.dart';
 import '../widgets/admin_sidebar.dart';
+import 'dart:math' as math;
 
 class AdminDashboardView extends GetView<AdminDashboardController> {
-  const AdminDashboardView({Key? key}) : super(key: key);
+  const AdminDashboardView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,31 +87,9 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                           ),
 
                           const SizedBox(height: 32),
-                          // Khu vực để biểu đồ (Chart) sau này
-                          Container(
-                            height: 400,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.02),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'Khu vực hiển thị Biểu đồ (Fl_chart)',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
+
+                          // Biểu đồ Doanh thu (Fl_chart)
+                          _buildRevenueChart(),
                         ],
                       ),
                     );
@@ -117,6 +97,203 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget Biểu đồ Doanh thu
+  Widget _buildRevenueChart() {
+    return Container(
+      height: 400,
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Doanh thu 7 ngày gần nhất',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: Obx(() {
+              if (controller.weeklyRevenue.every((element) => element == 0)) {
+                return const Center(
+                  child: Text(
+                    'Chưa có dữ liệu doanh thu trong 7 ngày qua.',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                );
+              }
+
+              // 1. Lấy giá trị cao nhất từ dữ liệu
+              double rawMax = controller.weeklyRevenue.reduce(
+                (curr, next) => curr > next ? curr : next,
+              );
+              if (rawMax == 0) rawMax = 10;
+
+              // 2. THUẬT TOÁN TÌM BƯỚC NHẢY TRÒN SỐ (10, 50, 100, 200, 500...)
+              double rawStep = rawMax / 5; // Chia mặc định 5 mốc
+
+              // Tính bậc độ lớn (Ví dụ: rawStep=123 => mag=100)
+              double mag = math
+                  .pow(10, (math.log(rawStep) / math.ln10).floor())
+                  .toDouble();
+              double normStep = rawStep / mag; // Đưa về số từ 1 đến 10
+
+              // Ép vào các mốc tròn đẹp nhất
+              double niceNorm;
+              if (normStep <= 1) {
+                niceNorm = 1;
+              } else if (normStep <= 2) {
+                niceNorm = 2;
+              } else if (normStep <= 5) {
+                niceNorm = 5;
+              } else {
+                niceNorm = 10;
+              }
+
+              // Bước nhảy cuối cùng (Ví dụ: 100, 200, 500)
+              double step = niceNorm * mag;
+
+              // Đỉnh trục Y (luôn là bội số của step)
+              double finalMaxY = step * 5;
+
+              return BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: finalMaxY,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          '\$${rod.toY.toStringAsFixed(2)}',
+                          const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          int index = value.toInt();
+                          if (index >= 0 &&
+                              index < controller.weeklyLabels.length) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                controller.weeklyLabels[index],
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }
+                          return const Text('');
+                        },
+                      ),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 60,
+                        interval: step,
+                        getTitlesWidget: (value, meta) {
+                          if (value == 0 || value == meta.max) {
+                            return const SizedBox.shrink();
+                          }
+
+                          // Rút gọn text nếu quá lớn
+                          String textValue;
+                          if (value >= 1000000) {
+                            textValue =
+                                '\$${(value / 1000000).toStringAsFixed(1)}M';
+                          } else if (value >= 1000) {
+                            textValue =
+                                '\$${(value / 1000).toStringAsFixed(1)}k';
+                          } else {
+                            textValue = '\$${value.toInt()}';
+                          }
+
+                          return SideTitleWidget(
+                            meta: meta,
+                            space: 8,
+                            child: Text(
+                              textValue,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: false,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: step, // Kẻ gạch ngang theo mốc tròn
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: Colors.grey.shade200,
+                        strokeWidth: 1,
+                      );
+                    },
+                  ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: List.generate(7, (index) {
+                    return BarChartGroupData(
+                      x: index,
+                      barRods: [
+                        BarChartRodData(
+                          toY: controller.weeklyRevenue[index],
+                          color: Colors.blueAccent,
+                          width: 20,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4),
+                            topRight: Radius.circular(4),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              );
+            }),
           ),
         ],
       ),
@@ -150,9 +327,12 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                 onPressed: () {},
               ),
               const SizedBox(width: 16),
-              const CircleAvatar(
-                backgroundColor: Colors.blueAccent,
-                child: Icon(Icons.person, color: Colors.white),
+              GestureDetector(
+                onTap: controller.logout,
+                child: const CircleAvatar(
+                  backgroundColor: Colors.blueAccent,
+                  child: Icon(Icons.logout, color: Colors.white, size: 20),
+                ),
               ),
             ],
           ),
@@ -192,23 +372,28 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
             child: Icon(icon, color: color, size: 28),
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+          Expanded(
+            // Tránh lỗi overflow nếu số liệu quá dài
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),
