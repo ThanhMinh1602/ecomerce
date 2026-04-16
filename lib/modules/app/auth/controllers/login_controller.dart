@@ -1,17 +1,19 @@
 import 'package:ecomerce/core/base/base_controller.dart';
 import 'package:ecomerce/core/utils/validator_util.dart';
 import 'package:ecomerce/data/services/auth_service.dart';
+import 'package:ecomerce/data/services/preferences_service.dart';
 import 'package:ecomerce/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends BaseController {
   final AuthService _authService;
+  final PreferencesService _preferencesService = PreferencesService();
 
   LoginController(this._authService);
 
-  final emailController = TextEditingController(text: 'ntminh16201@gmail.com');
-  final passwordController = TextEditingController(text: '123456');
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   var isFormValid = false.obs;
@@ -44,6 +46,9 @@ class LoginController extends BaseController {
       hideLoading();
 
       if (isSuccess) {
+        // Save login state and user email
+        await _preferencesService.setUserLoggedIn(true);
+        await _preferencesService.setUserEmail(emailController.text.trim());
         Get.offAllNamed(AppRouter.dashboard);
       } else {
         showError(
@@ -67,6 +72,8 @@ class LoginController extends BaseController {
     hideLoading();
 
     if (isSuccess) {
+      // Save login state
+      await _preferencesService.setUserLoggedIn(true);
       Get.offAllNamed(AppRouter.dashboard);
     } else {
       showError(
@@ -85,6 +92,8 @@ class LoginController extends BaseController {
     hideLoading();
 
     if (isSuccess) {
+      // Save login state
+      await _preferencesService.setUserLoggedIn(true);
       Get.offAllNamed(AppRouter.dashboard);
     } else {
       showError(

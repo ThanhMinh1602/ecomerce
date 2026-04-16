@@ -58,6 +58,7 @@ class OnboardingBottomCard extends GetView<OnboardingController> {
               btnText: 'Next',
               onPressed: () {
                 if (controller.pageIndex.value == controller.onboardImages.length - 1) {
+                  controller.completeOnboarding();
                   Get.offNamed(AppRouter.login);
                 } else {
                   pageController.nextPage(

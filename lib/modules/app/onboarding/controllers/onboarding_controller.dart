@@ -1,11 +1,13 @@
 import 'package:ecomerce/core/base/base_controller.dart';
 import 'package:ecomerce/core/constants/app_asset.dart';
 import 'package:ecomerce/data/models/onboarding_model.dart';
+import 'package:ecomerce/data/services/preferences_service.dart';
 import 'package:get/get.dart';
 
 class OnboardingController extends BaseController {
   late final List<OnboardingModel> onboardImages;
   RxInt pageIndex = 0.obs;
+  final PreferencesService _preferencesService = PreferencesService();
 
   @override
   void onInit() {
@@ -30,5 +32,9 @@ class OnboardingController extends BaseController {
       ),
     ];
     super.onInit();
+  }
+
+  Future<void> completeOnboarding() async {
+    await _preferencesService.setOnboardingShown();
   }
 }

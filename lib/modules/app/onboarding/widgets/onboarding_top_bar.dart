@@ -30,7 +30,10 @@ class OnboardingTopBar extends GetView<OnboardingController> {
                   )
                 : const SizedBox(width: 48),
             TextButton(
-              onPressed: () => Get.offNamed(AppRouter.login),
+              onPressed: () {
+                controller.completeOnboarding();
+                Get.offNamed(AppRouter.login);
+              },
               child: Text(
                 'Skip',
                 style: AppStyle.smallContentBold.copyWith(

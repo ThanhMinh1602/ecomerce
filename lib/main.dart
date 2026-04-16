@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:ecomerce/core/constants/app_color.dart';
 import 'package:ecomerce/data/binding/initial_binding.dart';
+import 'package:ecomerce/data/services/preferences_service.dart';
 import 'package:ecomerce/firebase_options.dart';
 import 'package:ecomerce/routes/app_page.dart';
 import 'package:ecomerce/routes/app_router.dart';
@@ -11,6 +12,7 @@ import 'package:get/route_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PreferencesService().init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }

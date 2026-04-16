@@ -1,6 +1,7 @@
 import 'package:ecomerce/core/providers/firebase_provider.dart';
 import 'package:ecomerce/data/enums/user_role.dart';
 import 'package:ecomerce/data/models/user_model.dart';
+import 'package:ecomerce/data/services/preferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -298,5 +299,7 @@ class AuthService extends GetxService {
     }
 
     currentUser.value = null;
+    // Clear login preferences
+    await PreferencesService().clearLoginData();
   }
 }
