@@ -63,7 +63,8 @@ class ProfileView extends GetView<ProfileController> {
                               child: const CircleAvatar(
                                 radius: 40,
                                 backgroundImage: NetworkImage(
-                                    'https://img.freepik.com/free-photo/handsome-businessman-suit-glasses-cross-arms-chest-look_176420-21750.jpg'),
+                                  'https://blog.vn.revu.net/wp-content/uploads/2025/09/anh-son-tung-mtp-thumb.jpg',
+                                ),
                               ),
                             ),
                             Positioned(
@@ -75,10 +76,13 @@ class ProfileView extends GetView<ProfileController> {
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.edit,
-                                    size: 14, color: Color(0xFFFF7A00)),
+                                child: const Icon(
+                                  Icons.edit,
+                                  size: 14,
+                                  color: Color(0xFFFF7A00),
+                                ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                         const SizedBox(width: 16),
@@ -184,16 +188,25 @@ class ProfileView extends GetView<ProfileController> {
                       onTap: () {
                         Get.defaultDialog(
                           title: 'Confirm Log Out',
-                          titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                          middleText: 'Are you sure you want to log out of your account?',
-                          middleTextStyle: const TextStyle(fontSize: 14, color: Colors.black54),
+                          titleStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          middleText:
+                              'Are you sure you want to log out of your account?',
+                          middleTextStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
                           backgroundColor: Colors.white,
                           radius: 16,
                           textCancel: 'Cancel',
                           cancelTextColor: textBrown,
                           textConfirm: 'Log Out',
                           confirmTextColor: Colors.white,
-                          buttonColor: const Color(0xFFD34C4C), // Trùng màu đỏ với icon
+                          buttonColor: const Color(
+                            0xFFD34C4C,
+                          ), // Trùng màu đỏ với icon
                           onConfirm: () {
                             Get.back(); // Đóng Dialog trước
                             controller.logout(); // Sau đó mới gọi hàm đăng xuất
