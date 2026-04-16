@@ -15,14 +15,9 @@ class PreferencesService {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // Keys for preferences
   static const String _onboardingShownKey = 'onboarding_shown';
   static const String _isLoggedInKey = 'is_logged_in';
   static const String _userEmailKey = 'user_email';
-
-  // ==========================================
-  // Onboarding preferences
-  // ==========================================
 
   Future<bool> isOnboardingShown() async {
     return _prefs.getBool(_onboardingShownKey) ?? false;
@@ -32,10 +27,6 @@ class PreferencesService {
     await _prefs.setBool(_onboardingShownKey, true);
   }
 
-  // ==========================================
-  // Login preferences
-  // ==========================================
-
   Future<bool> isUserLoggedIn() async {
     return _prefs.getBool(_isLoggedInKey) ?? false;
   }
@@ -44,10 +35,6 @@ class PreferencesService {
     await _prefs.setBool(_isLoggedInKey, isLoggedIn);
   }
 
-  // ==========================================
-  // User email preferences
-  // ==========================================
-
   Future<String?> getUserEmail() async {
     return _prefs.getString(_userEmailKey);
   }
@@ -55,10 +42,6 @@ class PreferencesService {
   Future<void> setUserEmail(String email) async {
     await _prefs.setString(_userEmailKey, email);
   }
-
-  // ==========================================
-  // Clear all preferences (logout)
-  // ==========================================
 
   Future<void> clearAll() async {
     await _prefs.clear();
