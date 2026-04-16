@@ -122,9 +122,11 @@ class CartView extends GetView<CartController> {
           Obx(() {
             final hasSelectedItems = controller.selectedTotalPrice > 0;
             return Expanded(
-              flex: 1,
+              flex: 2,
               child: CustomButton(
-                onPressed: hasSelectedItems ? controller.proceedToCheckout : null,
+                onPressed: hasSelectedItems
+                    ? controller.proceedToCheckout
+                    : null,
                 btnText: 'Checkout',
               ),
             );

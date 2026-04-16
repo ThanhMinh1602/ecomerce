@@ -47,29 +47,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD3zubt81qoHWLdGbZW45W8NkPkWw569oU',
-    appId: '1:682314435499:web:2ebb946d7dc6a3e4a920ee',
-    messagingSenderId: '682314435499',
-    projectId: 'ecomerce-c91cb',
-    authDomain: 'ecomerce-c91cb.firebaseapp.com',
-    storageBucket: 'ecomerce-c91cb.firebasestorage.app',
-    measurementId: 'G-EZYF3L9532',
+    apiKey: 'AIzaSyDWEW8YjqAfZfqxQ4FddvJjRLBC9vtds1k',
+    appId: '1:413425250176:web:7a9411f342119befe25b65',
+    messagingSenderId: '413425250176',
+    projectId: 'ecomerce-1f0fe',
+    authDomain: 'ecomerce-1f0fe.firebaseapp.com',
+    storageBucket: 'ecomerce-1f0fe.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBKCJLVYU68Ufdo2zfpgZ4q4w5kPx3_v5s',
-    appId: '1:682314435499:android:d2a21d4cb7f68588a920ee',
-    messagingSenderId: '682314435499',
-    projectId: 'ecomerce-c91cb',
-    storageBucket: 'ecomerce-c91cb.firebasestorage.app',
+    apiKey: 'AIzaSyAePMh5UmEwN3Z_VNF-AEKmZA_MRgCpwvY',
+    appId: '1:413425250176:android:bcf63eccc8454b16e25b65',
+    messagingSenderId: '413425250176',
+    projectId: 'ecomerce-1f0fe',
+    storageBucket: 'ecomerce-1f0fe.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDV6rQWQqtK1IKDV2-8IXZXbyzAoH_CYuQ',
-    appId: '1:682314435499:ios:d33a2bf3e4eec4f9a920ee',
-    messagingSenderId: '682314435499',
-    projectId: 'ecomerce-c91cb',
-    storageBucket: 'ecomerce-c91cb.firebasestorage.app',
+    apiKey: 'AIzaSyA571U3rCdaTqHZN07HwejG1HEnc91eAR8',
+    appId: '1:413425250176:ios:cd590f4afd0996b0e25b65',
+    messagingSenderId: '413425250176',
+    projectId: 'ecomerce-1f0fe',
+    storageBucket: 'ecomerce-1f0fe.firebasestorage.app',
     iosBundleId: 'com.example.ecomerce',
   );
 }

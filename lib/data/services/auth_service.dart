@@ -33,7 +33,7 @@ class AuthService extends GetxService {
     if (!_isGoogleInitialized) {
       await GoogleSignIn.instance.initialize(
         // ⚠️ QUAN TRỌNG: Dán Web Client ID của bạn vào dòng dưới đây:
-        serverClientId: '682314435499-lbs6le72dmvfbjq72aigfiprdihp4h6i.apps.googleusercontent.com',
+        serverClientId: '413425250176-j6m5ajt03fmopicovt1ai9jctcg3er2u.apps.googleusercontent.com',
       );
       _isGoogleInitialized = true;
     }

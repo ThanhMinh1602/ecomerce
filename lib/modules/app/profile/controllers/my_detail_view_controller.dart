@@ -24,19 +24,16 @@ class MyDetailViewController extends BaseController with UserMixin {
     emailController = TextEditingController(text: userEmail);
     phoneController = TextEditingController(text: userPhone);
     newAddressController = TextEditingController();
-
-
   }
 
   @override
   void onReady() {
     super.onReady();
-    if(Get.arguments == true) {
+    if (Get.arguments == true) {
       Future.delayed(const Duration(milliseconds: 300), () {
         toggleAddingAddress();
       });
     }
-
   }
 
   void toggleAddingAddress() async {
@@ -145,7 +142,14 @@ class MyDetailViewController extends BaseController with UserMixin {
   Future<void> deleteAddress(int index) async {
     final user = authService.currentUser.value;
     if (user != null) {
-      user.addresses.removeAt(index);
+      // 1. Tạo một bản sao (Growable List) từ danh sách cũ
+      List<String> mutableAddresses = List<String>.from(user.addresses);
+
+      // 2. Xóa trên bản sao
+      mutableAddresses.removeAt(index);
+
+      // 3. Gán lại cho user
+      user.addresses = mutableAddresses;
 
       if (editingIndex.value == index) {
         editingIndex.value = null;

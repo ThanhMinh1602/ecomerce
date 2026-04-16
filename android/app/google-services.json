@@ -1,45 +1,45 @@
 {
   "project_info": {
-    "project_number": "682314435499",
-    "project_id": "ecomerce-c91cb",
-    "storage_bucket": "ecomerce-c91cb.firebasestorage.app"
+    "project_number": "413425250176",
+    "project_id": "ecomerce-1f0fe",
+    "storage_bucket": "ecomerce-1f0fe.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:682314435499:android:d2a21d4cb7f68588a920ee",
+        "mobilesdk_app_id": "1:413425250176:android:bcf63eccc8454b16e25b65",
         "android_client_info": {
           "package_name": "com.example.ecomerce"
         }
       },
       "oauth_client": [
         {
-          "client_id": "682314435499-9eoqq80c4dhrmnt491o4bjn99murjfr0.apps.googleusercontent.com",
+          "client_id": "413425250176-p0rhl2985pusiieh52htssctfpeah4jq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.ecomerce",
-            "certificate_hash": "3c5bf093eea762dca4436f63bd23dc6684b4903d"
+            "certificate_hash": "f8dddd4ca4ca16d353d9ac0bf66d572f1fd7dc74"
           }
         },
         {
-          "client_id": "682314435499-lbs6le72dmvfbjq72aigfiprdihp4h6i.apps.googleusercontent.com",
+          "client_id": "413425250176-j6m5ajt03fmopicovt1ai9jctcg3er2u.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBKCJLVYU68Ufdo2zfpgZ4q4w5kPx3_v5s"
+          "current_key": "AIzaSyAePMh5UmEwN3Z_VNF-AEKmZA_MRgCpwvY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "682314435499-lbs6le72dmvfbjq72aigfiprdihp4h6i.apps.googleusercontent.com",
+              "client_id": "413425250176-j6m5ajt03fmopicovt1ai9jctcg3er2u.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "682314435499-v0q8414qogafgc0v4stnqpomrfk7rigp.apps.googleusercontent.com",
+              "client_id": "413425250176-ld4n6sk1ujg9tp9873depidmccjc5ek8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.ecomerce"

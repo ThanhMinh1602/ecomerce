@@ -38,7 +38,13 @@ class CheckoutController extends BaseController {
       (order.totalAmount + shippingFee.value) - discountAmount.value;
 
   void changePaymentMethod(PaymentMethodType method) {
-    selectedPaymentMethod.value = method;
+    if (method == PaymentMethodType.cod) {
+      selectedPaymentMethod.value = method;
+      return;
+    }
+    showError(
+      'Hiện tại chỉ hỗ trợ thanh toán khi nhận hàng (COD). Vui lòng chọn COD để tiếp tục.',
+    );
   }
 
   void applyDiscount() {
@@ -105,7 +111,7 @@ class CheckoutController extends BaseController {
         }
 
         if (selectedPaymentMethod.value == PaymentMethodType.cod) {
-          order.payerEmail  = "";
+          order.payerEmail = "";
         }
 
         // Gọi OrderService để lưu đơn hàng

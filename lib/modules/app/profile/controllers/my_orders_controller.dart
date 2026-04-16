@@ -27,12 +27,20 @@ class MyOrdersController extends BaseController {
 
     // Lắng nghe real-time từ Firebase
     _orderSubscription = _orderService.streamMyOrders().listen(
-          (orders) {
+      (orders) {
         // Lọc đơn hàng và gán vào từng danh sách tương ứng
-        pendingOrders.value = orders.where((o) => o.status == OrderStatus.pending).toList();
-        processingOrders.value = orders.where((o) => o.status == OrderStatus.processing).toList();
-        shippedOrders.value = orders.where((o) => o.status == OrderStatus.shipped).toList();
-        deliveredOrders.value = orders.where((o) => o.status == OrderStatus.delivered).toList();
+        pendingOrders.value = orders
+            .where((o) => o.status == OrderStatus.pending)
+            .toList();
+        processingOrders.value = orders
+            .where((o) => o.status == OrderStatus.processing)
+            .toList();
+        shippedOrders.value = orders
+            .where((o) => o.status == OrderStatus.shipped)
+            .toList();
+        deliveredOrders.value = orders
+            .where((o) => o.status == OrderStatus.delivered)
+            .toList();
 
         isLoading.value = false;
       },
